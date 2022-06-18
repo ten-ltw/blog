@@ -30,6 +30,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           external_repository: ten-ltw/blog
-          personal_token: ${{ secrets.ACTION_ACCESS_TOKEN }}
+          personal_token: ${{ secrets.BLOG_GITHUB_TOKEN }}
           publish_dir: ./public
           publish_branch: blog
