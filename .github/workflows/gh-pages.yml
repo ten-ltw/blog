@@ -28,7 +28,8 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          github_token: ${{ secrets.ACTION_ACCESS_TOKEN }}
+          external_repository: ten-ltw/blog
+          personal_token: ${{ secrets.ACTION_ACCESS_TOKEN }}
           publish_dir: ./public
+          publish_branch: blog
