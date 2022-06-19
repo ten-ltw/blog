@@ -1,13 +1,13 @@
 ---
-title: "Openwrt_netdata_ttyd_ssl"
-date: 2022-06-19T09:44:07+08:00
-draft: true
+title: "OpenWrt 添加 SSL 证书后 NetData 和 TTYD 拒绝请求"
+date: 2022-04-10T21:06:37+08:00
+categories: ["All In One Server"]
 ---
 
 # OpenWrt 添加 SSL 证书后 NetData 和 TTYD 拒绝请求
 
 原因是 iframe 中 hardcode 访问 http 协议。
-直接通过 nginx 服务器反向代理添加与 OpenWrt 相同 SSL 证书解决。
+直接通过 nginx 服务器反向代理添加于 OpenWrt 相同 SSL 证书解决。
 
 ## 添加 SSL 证书
 
@@ -46,8 +46,7 @@ server {
 路由器映射 nginx 服务器 19999 端口后测试能否使用 https 协议域名访问 NetData。
 
 ## 修改静态 html
-
-![](media/16495959981816/16495984398450.jpg)
+![](../media/16495959981816/16495984398450.jpg)
 
 根目录下搜索路由 netdata 找到对应静态 html：
 
@@ -65,11 +64,11 @@ rom 目录是用来 reset 使用的，如果想 reset 时候也保持修改，�
 修改 iframe hardcode 的 protocol 和 端口号：
 
 ```js
-if(document.location.protocol.indexOf('https')>-1){
-        document.getElementById("netdata").src = "https://" + window.location.hostname + ":8134";
-} else {
-        document.getElementById("netdata").src = "http://" + window.location.hostname + ":19999";
-}
+        if(document.location.protocol.indexOf('https')>-1){
+                document.getElementById("netdata").src = "https://" + window.location.hostname + ":8134";
+        } else {
+                document.getElementById("netdata").src = "http://" + window.location.hostname + ":19999";
+        }
 ```
 OK 刷新画面搞定。
 
