@@ -1,12 +1,11 @@
+# for build
 baseURL = 'https://blog.okten.cn/'
-
-# 更改使用 Hugo 构建网站时使用的默认主题
 theme = "LoveIt"
 minify = true
 html = "keep"
 Whitespace = false
-# 网站标题
-title = "我的全新 Hugo 网站"
+
+title = "Ten's blog"
 
 # 网站语言, 仅在这里 CN 大写 ["en", "zh-CN", "fr", "pl", ...]
 languageCode = "zh-CN"
@@ -17,8 +16,8 @@ hasCJKLanguage = true
 
 # 作者配置
 [author]
-  name = "xxxx"
-  email = ""
+  name = "Ten Li"
+  email = "li.tw.ten"
   link = ""
 
 # 菜单配置
