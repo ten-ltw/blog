@@ -1,0 +1,344 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>TypeScript 补漏 - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="TypeScript 补漏">
+<meta property="og:description" content="TypeScript 补漏 TypeScript 基础 函数签名和重载 Signature Overloading function contactPeople(method: &#34;email&#34;, ...people: HasEmail[]): void; function contactPeople(method: &#34;phone&#34;, ...people: HasPhoneNumber[]): void; function contactPeople(method: &#34;email&#34; | &#34;phone&#34;, ...people: (HasEmail | HasPhoneNumber)[]): void { } 词法作用域 Lexical Scope TODO Interfaces 和 type aliases TODO 泛型 Generics 泛型使用 interface WrappedValue<T> { value: T; } let val: WrappedValue<string[]> = {">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/typescript/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-05-07T18:06:39+08:00">
+<meta property="article:modified_time" content="2021-05-07T18:06:39+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="TypeScript 补漏">
+<meta name=twitter:description content="TypeScript 补漏 TypeScript 基础 函数签名和重载 Signature Overloading function contactPeople(method: &#34;email&#34;, ...people: HasEmail[]): void; function contactPeople(method: &#34;phone&#34;, ...people: HasPhoneNumber[]): void; function contactPeople(method: &#34;email&#34; | &#34;phone&#34;, ...people: (HasEmail | HasPhoneNumber)[]): void { } 词法作用域 Lexical Scope TODO Interfaces 和 type aliases TODO 泛型 Generics 泛型使用 interface WrappedValue<T> { value: T; } let val: WrappedValue<string[]> = {">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/typescript/><link rel=prev href=https://blog.okten.cn/posts/angular-%E4%B8%AD-rxjs-%E7%9A%84%E5%BA%94%E7%94%A8/><link rel=next href=https://blog.okten.cn/posts/esxi/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TypeScript 补漏","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/typescript\/"},"genre":"posts","wordcount":1442,"url":"https:\/\/blog.okten.cn\/posts\/typescript\/","datePublished":"2021-05-07T18:06:39+08:00","dateModified":"2021-05-07T18:06:39+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">TypeScript 补漏</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2021-05-07>2021-05-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1442 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;3 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#typescript-基础>TypeScript 基础</a>
+<ul>
+<li><a href=#函数签名和重载-signature-overloading>函数签名和重载 Signature Overloading</a></li>
+<li><a href=#词法作用域-lexical-scope>词法作用域 Lexical Scope</a></li>
+</ul>
+</li>
+<li><a href=#interfaces-和-type-aliases>Interfaces 和 type aliases</a>
+<ul>
+<li></li>
+</ul>
+</li>
+<li><a href=#泛型-generics>泛型 Generics</a>
+<ul>
+<li><a href=#泛型使用>泛型使用</a></li>
+<li><a href=#泛型参数>泛型参数</a></li>
+<li><a href=#约束和作用域-constraints-scope>约束和作用域 Constraints Scope</a></li>
+<li><a href=#泛型的使用>泛型的使用</a></li>
+</ul>
+</li>
+<li><a href=#顶层类型和底层类型>顶层类型和底层类型</a>
+<ul>
+<li><a href=#top-types>Top Types</a></li>
+<li><a href=#type-guards>Type Guards</a></li>
+<li><a href=#branded-types>Branded Types</a></li>
+<li><a href=#bottom-types>Bottom Types</a></li>
+</ul>
+</li>
+<li><a href=#高级类型>高级类型</a>
+<ul>
+<li><a href=#keyof-和-typeof>keyof 和 typeof</a></li>
+<li><a href=#built-in-类型>Built-In 类型</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=typescript-补漏>TypeScript 补漏</h1>
+<h2 id=typescript-基础>TypeScript 基础</h2>
+<h3 id=函数签名和重载-signature-overloading>函数签名和重载 Signature Overloading</h3>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>function</span> <span class=nx>contactPeople</span><span class=p>(</span><span class=nx>method</span><span class=o>:</span> <span class=s2>&#34;email&#34;</span><span class=p>,</span> <span class=p>...</span><span class=nx>people</span>: <span class=kt>HasEmail</span><span class=p>[])</span><span class=o>:</span> <span class=k>void</span><span class=p>;</span>
+<span class=kd>function</span> <span class=nx>contactPeople</span><span class=p>(</span><span class=nx>method</span><span class=o>:</span> <span class=s2>&#34;phone&#34;</span><span class=p>,</span> <span class=p>...</span><span class=nx>people</span>: <span class=kt>HasPhoneNumber</span><span class=p>[])</span><span class=o>:</span> <span class=k>void</span><span class=p>;</span>
+<span class=kd>function</span> <span class=nx>contactPeople</span><span class=p>(</span><span class=nx>method</span><span class=o>:</span> <span class=s2>&#34;email&#34;</span> <span class=o>|</span> <span class=s2>&#34;phone&#34;</span><span class=p>,</span> <span class=p>...</span><span class=nx>people</span><span class=o>:</span> <span class=p>(</span><span class=nx>HasEmail</span> <span class=o>|</span> <span class=nx>HasPhoneNumber</span><span class=p>)[])</span><span class=o>:</span> <span class=k>void</span> <span class=p>{</span>
+<span class=p>}</span>
+</code></pre></div><h3 id=词法作用域-lexical-scope>词法作用域 Lexical Scope</h3>
+<h4 id=todo>TODO</h4>
+<h2 id=interfaces-和-type-aliases>Interfaces 和 type aliases</h2>
+<h4 id=todo-1>TODO</h4>
+<h2 id=泛型-generics>泛型 Generics</h2>
+<h3 id=泛型使用>泛型使用</h3>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>WrappedValue</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=p>{</span>
+  <span class=nx>value</span>: <span class=kt>T</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kd>let</span> <span class=nx>val</span>: <span class=kt>WrappedValue</span><span class=p>&lt;</span><span class=nt>string</span><span class=err>[]</span><span class=p>&gt;</span> <span class=o>=</span> <span class=p>{</span> <span class=nx>value</span><span class=o>:</span> <span class=p>[]</span> <span class=p>};</span>
+<span class=nx>val</span><span class=p>.</span><span class=nx>value</span><span class=p>;</span>
+</code></pre></div><p>鼠标悬停在 <code>val.value</code> 的 <code>value</code> 上可以看到：</p>
+<blockquote>
+<p>(property) WrappedValue&lt;string[]>.value: string[]</p>
+</blockquote>
+<p>在各种类库的描述文件中也经常能够看到泛型的应用：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>MapLike</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=p>{</span>
+    <span class=p>[</span><span class=nx>index</span>: <span class=kt>string</span><span class=p>]</span><span class=o>:</span> <span class=nx>T</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kr>interface</span> <span class=nx>SortedReadonlyArray</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=kr>extends</span> <span class=nx>ReadonlyArray</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=p>{</span>
+    <span class=s2>&#34; __sortedArrayBrand&#34;</span><span class=o>:</span> <span class=kt>any</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kr>interface</span> <span class=nx>SortedArray</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=kr>extends</span> <span class=nb>Array</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=p>{</span>
+    <span class=s2>&#34; __sortedArrayBrand&#34;</span><span class=o>:</span> <span class=kt>any</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><h3 id=泛型参数>泛型参数</h3>
+<p>上述方式在使用 WrappedValue 时必须添加泛型参数，如果不添加使用会报错：</p>
+<blockquote>
+<p>Generic type &lsquo;WrappedValue&rsquo; requires 1 type argument(s).</p>
+</blockquote>
+<p>这里可以看到 WrappedValue 需要一个实参，那么我们也可以为其设置参数默认值，就可以不提供类型参数也能使用 WrappedValue：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>WrappedValue</span><span class=p>&lt;</span><span class=nt>T</span> <span class=err>=</span> <span class=na>any</span><span class=p>&gt;</span> <span class=p>{</span>
+  <span class=nx>value</span>: <span class=kt>T</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kd>let</span> <span class=nx>val</span>: <span class=kt>WrappedValue</span> <span class=o>=</span> <span class=p>{</span> <span class=nx>value</span><span class=o>:</span> <span class=p>[]</span> <span class=p>};</span>
+<span class=nx>val</span><span class=p>.</span><span class=nx>value</span><span class=p>;</span>
+</code></pre></div><p>下面是一个常用的泛型做参数的情况：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>function</span> <span class=nx>resolveOrTimeout</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;(</span><span class=nx>promise</span>: <span class=kt>Promise</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;,</span> <span class=nx>timeout</span>: <span class=kt>number</span><span class=p>)</span><span class=o>:</span> <span class=nx>Promise</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=p>{</span> <span class=c1>// =&gt; 1
+</span><span class=c1></span>  <span class=k>return</span> <span class=k>new</span> <span class=nx>Promise</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;((</span><span class=nx>resolve</span><span class=p>,</span> <span class=nx>reject</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span> <span class=c1>// =&gt; 2
+</span><span class=c1></span>    <span class=c1>// start the timeout, reject when it triggers
+</span><span class=c1></span>    <span class=kr>const</span> <span class=nx>task</span> <span class=o>=</span> <span class=nx>setTimeout</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=nx>reject</span><span class=p>(</span><span class=s2>&#34;time up!&#34;</span><span class=p>),</span> <span class=nx>timeout</span><span class=p>);</span> <span class=c1>// =&gt; 3
+</span><span class=c1></span>
+    <span class=nx>promise</span><span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=nx>val</span> <span class=o>=&gt;</span> <span class=p>{</span>
+      <span class=c1>// cancel the timeout
+</span><span class=c1></span>      <span class=nx>clearTimeout</span><span class=p>(</span><span class=nx>task</span><span class=p>);</span> <span class=c1>// =&gt; 4                                    
+</span><span class=c1></span>
+      <span class=c1>// resolve with the value // =&gt; 5
+</span><span class=c1></span>      <span class=nx>resolve</span><span class=p>(</span><span class=nx>val</span><span class=p>);</span>                                            
+    <span class=p>});</span>
+  <span class=p>});</span>
+<span class=p>}</span>
+</code></pre></div><ol>
+<li>泛型 T 设定后，会传递一个类型为 Promise&lt;T> 名为 promise 的参数。</li>
+<li>这个方法返回一个类型为 Promise&lt;T> 的新 Promise。</li>
+<li>根据 timeout 时间设置定时，如果时间到了，执行 callback，也就是新创建的 Promise 将 rejected。</li>
+<li>如果 timeout 设定的时间没终止，传入的参数 promise 提前 fulfilled，那么直接清除延时。</li>
+<li>将 fulfilled 的值 resolve 到新创建的 Promise 中。</li>
+</ol>
+<p>这是一个典型的 Http 请求超时的解决方案。</p>
+<h3 id=约束和作用域-constraints-scope>约束和作用域 Constraints Scope</h3>
+<p>可以通过 extends 来约束泛型：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>function</span> <span class=nx>arrayToDict</span><span class=p>&lt;</span><span class=nt>T</span> <span class=na>extends</span> <span class=p>{</span> <span class=na>id</span><span class=err>:</span> <span class=na>string</span> <span class=p>}&gt;(</span><span class=nx>array</span>: <span class=kt>T</span><span class=p>[])</span><span class=o>:</span> <span class=p>{</span> <span class=p>[</span><span class=nx>k</span>: <span class=kt>string</span><span class=p>]</span><span class=o>:</span> <span class=nx>T</span> <span class=p>}</span> <span class=p>{</span>
+  <span class=kr>const</span> <span class=nx>out</span><span class=o>:</span> <span class=p>{</span> <span class=p>[</span><span class=nx>k</span>: <span class=kt>string</span><span class=p>]</span><span class=o>:</span> <span class=nx>T</span> <span class=p>}</span> <span class=o>=</span> <span class=p>{};</span>
+  <span class=nx>array</span><span class=p>.</span><span class=nx>forEach</span><span class=p>(</span><span class=nx>val</span> <span class=o>=&gt;</span> <span class=p>{</span>
+    <span class=nx>out</span><span class=p>[</span><span class=nx>val</span><span class=p>.</span><span class=nx>id</span><span class=p>]</span> <span class=o>=</span> <span class=nx>val</span><span class=p>;</span>
+  <span class=p>});</span>
+  <span class=k>return</span> <span class=nx>out</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p>如果用以下代码将不带有 id 属性对象的数组作为 arrayToDict 的参数：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>const</span> <span class=nx>myDict</span> <span class=o>=</span> <span class=nx>arrayToDict</span><span class=p>([</span>
+  <span class=p>{</span> <span class=nx>foo</span><span class=o>:</span> <span class=s2>&#34;foo&#34;</span> <span class=p>}</span>
+<span class=p>]);</span>
+</code></pre></div><p>就会出现以下错误：</p>
+<blockquote>
+<p>Type &lsquo;{ foo: string; }&rsquo; is not assignable to type &lsquo;{ id: string; }&rsquo;.
+Object literal may only specify known properties, and &lsquo;foo&rsquo; does not exist in type &lsquo;{ id: string; }&rsquo;.</p>
+</blockquote>
+<p>这里限制了泛型 T 内必须有 string 类型的 id 属性，所以我们可以使用 <code>val.id</code>。如果将约束 <code>extends { id: string }</code> 删除，就会看到 <code>val.id</code> 出现下面的错误：</p>
+<blockquote>
+<p>Property &lsquo;id&rsquo; does not exist on type &lsquo;T&rsquo;.</p>
+</blockquote>
+<p>泛型类似参数，同样享有函数参数同样的作用域，也可以应用在闭包中：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>function</span> <span class=nx>firstTuple</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;(</span><span class=nx>firstElement</span>: <span class=kt>T</span><span class=p>)</span> <span class=p>{</span>
+  <span class=k>return</span> <span class=kd>function</span> <span class=nx>finishTuple</span><span class=p>&lt;</span><span class=nt>U</span><span class=p>&gt;(</span><span class=nx>b</span>: <span class=kt>U</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=p>[</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>]</span> <span class=kr>as</span> <span class=p>[</span><span class=nx>T</span><span class=p>,</span> <span class=nx>U</span><span class=p>];</span>
+  <span class=p>};</span>
+<span class=p>}</span>
+<span class=kr>const</span> <span class=nx>myTuple</span> <span class=o>=</span> <span class=nx>startTuple</span><span class=p>([</span><span class=s2>&#34;first&#34;</span><span class=p>])(</span><span class=mi>42</span><span class=p>);</span>
+</code></pre></div><p>鼠标悬停在 myTuple 上可以看到该元组的类型：</p>
+<blockquote>
+<p><strong>const</strong> myTuple: [string[], number]</p>
+</blockquote>
+<h3 id=泛型的使用>泛型的使用</h3>
+<p>泛型只有在 input 和 output 同时需要时才使用，下面是一个没有必要用泛型的例子：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>Shape</span> <span class=p>{</span>
+  <span class=nx>draw</span><span class=p>();</span>
+<span class=p>}</span>
+
+<span class=kr>interface</span> <span class=nx>Circle</span> <span class=kr>extends</span> <span class=nx>Shape</span> <span class=p>{</span>
+  <span class=nx>radius</span>: <span class=kt>number</span><span class=p>;</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>drawShapes1</span><span class=p>&lt;</span><span class=nt>S</span> <span class=na>extends</span> <span class=na>Shape</span><span class=p>&gt;(</span><span class=nx>shapes</span>: <span class=kt>S</span><span class=p>[])</span> <span class=p>{</span>
+  <span class=nx>shapes</span><span class=p>.</span><span class=nx>forEach</span><span class=p>(</span><span class=nx>s</span> <span class=o>=&gt;</span> <span class=nx>s</span><span class=p>.</span><span class=nx>draw</span><span class=p>());</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>drawShapes2</span><span class=p>(</span><span class=nx>shapes</span>: <span class=kt>Shape</span><span class=p>[])</span> <span class=p>{</span>
+  <span class=c1>// this is simpler. Above type param is not necessary
+</span><span class=c1></span>  <span class=nx>shapes</span><span class=p>.</span><span class=nx>forEach</span><span class=p>(</span><span class=nx>s</span> <span class=o>=&gt;</span> <span class=nx>s</span><span class=p>.</span><span class=nx>draw</span><span class=p>());</span>
+<span class=p>}</span>
+</code></pre></div><p>方法 2 和方法 1 起到了同样的效果，但是输出不再需要泛型。</p>
+<p>但是如果有这样一个需求，Shape 中不但有 draw 方法，还有是否已经绘制的 Flag，并且我要在绘制之后将 Shape 对象返回，就可以使用泛型：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>Shape</span> <span class=p>{</span>
+  <span class=nx>draw</span><span class=p>();</span>
+  <span class=nx>isDrawn</span>: <span class=kt>boolean</span><span class=p>;</span>
+<span class=p>}</span>
+
+<span class=kr>interface</span> <span class=nx>Circle</span> <span class=kr>extends</span> <span class=nx>Shape</span> <span class=p>{</span>
+  <span class=nx>radius</span>: <span class=kt>number</span><span class=p>;</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>drawShapes</span><span class=p>&lt;</span><span class=nt>S</span> <span class=na>extends</span> <span class=na>Shape</span><span class=p>&gt;(</span><span class=nx>shapes</span>: <span class=kt>S</span><span class=p>[])</span><span class=o>:</span> <span class=nx>S</span><span class=p>[]</span> <span class=p>{</span>
+  <span class=k>return</span> <span class=nx>shapes</span><span class=p>.</span><span class=nx>map</span><span class=p>(</span><span class=nx>s</span> <span class=o>=&gt;</span> <span class=p>{</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>draw</span><span class=p>;</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>isDrawn</span> <span class=o>=</span> <span class=kc>true</span><span class=p>;</span>
+    <span class=k>return</span> <span class=nx>s</span><span class=p>;</span>
+  <span class=p>})</span>
+<span class=p>}</span>
+</code></pre></div><h2 id=顶层类型和底层类型>顶层类型和底层类型</h2>
+<h3 id=top-types>Top Types</h3>
+<ul>
+<li>any</li>
+<li>unknow</li>
+</ul>
+<p>顶层类型可以接收任何类型的值。</p>
+<p>unknow 在不确定类型时无法获取它的值。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>let</span> <span class=nx>myUnknown</span>: <span class=kt>unknown</span> <span class=o>=</span> <span class=s2>&#34;hello, unknown&#34;</span><span class=p>;</span>
+
+<span class=k>if</span> <span class=p>(</span><span class=k>typeof</span> <span class=nx>myUnknown</span> <span class=o>===</span> <span class=s2>&#34;string&#34;</span><span class=p>)</span> <span class=p>{</span>
+  <span class=c1>// in here, myUnknown is of type string
+</span><span class=c1></span>  <span class=nx>myUnknown</span><span class=p>.</span><span class=nx>split</span><span class=p>(</span><span class=s2>&#34;, &#34;</span><span class=p>);</span> <span class=c1>// 
+</span><span class=c1></span><span class=p>}</span>
+<span class=k>if</span> <span class=p>(</span><span class=nx>myUnknown</span> <span class=k>instanceof</span> <span class=nx>Promise</span><span class=p>)</span> <span class=p>{</span>
+  <span class=c1>// in here, myUnknown is of type Promise&lt;any&gt;
+</span><span class=c1></span>  <span class=nx>myUnknown</span><span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=nx>x</span> <span class=o>=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>x</span><span class=p>));</span>
+<span class=p>}</span>
+</code></pre></div><blockquote>
+<p>typeof 在判断 null、array、object 时都是 object，需要用 instanceof 来判断原型链。</p>
+</blockquote>
+<h3 id=type-guards>Type Guards</h3>
+<p>TypeScript 的类型判断自上而下进行，无法反向推断类型，比如函数的参数，如果没有定义类型，即使在后面赋值 string，参数类型仍然是 any。</p>
+<p>可以用以下方式确认复杂类型：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>function</span> <span class=nx>isHasEmail</span><span class=p>(</span><span class=nx>x</span>: <span class=kt>any</span><span class=p>)</span><span class=o>:</span> <span class=nx>x</span> <span class=k>is</span> <span class=nx>HasEmail</span> <span class=p>{</span>
+  <span class=k>return</span> <span class=k>typeof</span> <span class=nx>x</span><span class=p>.</span><span class=nx>name</span> <span class=o>===</span> <span class=s2>&#34;string&#34;</span> <span class=o>&amp;&amp;</span> <span class=k>typeof</span> <span class=nx>x</span><span class=p>.</span><span class=nx>email</span> <span class=o>===</span> <span class=s2>&#34;string&#34;</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=k>if</span> <span class=p>(</span><span class=nx>isHasEmail</span><span class=p>(</span><span class=nx>myUnknown</span><span class=p>))</span> <span class=p>{</span>
+  <span class=c1>// In here, myUnknown is of type HasEmail
+</span><span class=c1></span>  <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>myUnknown</span><span class=p>.</span><span class=nx>name</span><span class=p>,</span> <span class=nx>myUnknown</span><span class=p>.</span><span class=nx>email</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></div><p>同理利用泛型有了下面这种通用的类型守卫：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kd>function</span> <span class=nx>isDefined</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;(</span><span class=nx>arg</span>: <span class=kt>T</span> <span class=o>|</span> <span class=kc>undefined</span><span class=p>)</span><span class=o>:</span> <span class=nx>arg</span> <span class=k>is</span> <span class=nx>T</span> <span class=p>{</span>
+  <span class=k>return</span> <span class=k>typeof</span> <span class=nx>arg</span> <span class=o>!==</span> <span class=s2>&#34;undefined&#34;</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><h3 id=branded-types>Branded Types</h3>
+<h4 id=todo-2>TODO</h4>
+<h3 id=bottom-types>Bottom Types</h3>
+<p>never 个人感觉没啥用。</p>
+<h2 id=高级类型>高级类型</h2>
+<h3 id=keyof-和-typeof>keyof 和 typeof</h3>
+<p>typeof 是 JavaScript 就有的特性。</p>
+<p>keyof 可以直接获取接口的属性名。</p>
+<p>接口也可以用属性表达式来获取对应属性的类型。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>CommunicationMethods</span> <span class=p>{</span>
+  <span class=nx>email</span>: <span class=kt>HasEmail</span><span class=p>;</span>
+  <span class=nx>phone</span>: <span class=kt>HasPhoneNumber</span><span class=p>;</span>
+  <span class=nx>fax</span><span class=o>:</span> <span class=p>{</span> <span class=nx>fax</span>: <span class=kt>number</span> <span class=p>};</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>contact</span><span class=p>&lt;</span><span class=nt>K</span> <span class=na>extends</span> <span class=na>keyof</span> <span class=na>CommunicationMethods</span><span class=p>&gt;(</span>
+  <span class=nx>method</span>: <span class=kt>K</span><span class=p>,</span>
+  <span class=nx>contact</span>: <span class=kt>CommunicationMethods</span><span class=p>[</span><span class=nx>K</span><span class=p>]</span> <span class=c1>// 💡turning key into value -- a *mapped type*
+</span><span class=c1></span><span class=p>)</span> <span class=p>{</span>
+  <span class=c1>//...
+</span><span class=c1></span><span class=p>}</span>
+<span class=kr>type</span> <span class=nx>AllType</span> <span class=o>=</span> <span class=k>keyof</span> <span class=nx>CommunicationMethods</span><span class=p>;</span>
+<span class=kd>let</span> <span class=nx>x</span>: <span class=kt>AllType</span> <span class=o>=</span> <span class=s1>&#39;email&#39;</span><span class=p>;</span>
+<span class=kr>type</span> <span class=nx>Email</span> <span class=o>=</span> <span class=nx>CommunicationMethods</span><span class=p>[</span><span class=s1>&#39;email&#39;</span><span class=p>];</span>
+</code></pre></div><h3 id=built-in-类型>Built-In 类型</h3>
+<h4 id=partial>Partial</h4>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=cm>/**
+</span><span class=cm> * Make all properties in T optional
+</span><span class=cm> */</span>
+<span class=kr>type</span> <span class=nx>Partial</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=o>=</span> <span class=p>{</span>
+    <span class=p>[</span><span class=nx>P</span> <span class=k>in</span> <span class=k>keyof</span> <span class=nx>T</span><span class=p>]</span><span class=o>?:</span> <span class=nx>T</span><span class=p>[</span><span class=nx>P</span><span class=p>];</span>
+<span class=p>};</span>
+</code></pre></div><p>返回新的类型，并且所有的参数都是可选项。</p>
+<h4 id=pick>Pick</h4>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>type</span> <span class=nx>HasThen</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;</span> <span class=o>=</span> <span class=nx>Pick</span><span class=p>&lt;</span><span class=nt>Promise</span><span class=err>&lt;</span><span class=na>T</span><span class=p>&gt;,</span> <span class=s2>&#34;then&#34;</span> <span class=o>|</span> <span class=s2>&#34;catch&#34;</span><span class=o>&gt;</span><span class=p>;</span>
+
+<span class=kd>let</span> <span class=nx>hasThen</span>: <span class=kt>HasThen</span><span class=p>&lt;</span><span class=nt>number</span><span class=p>&gt;</span> <span class=o>=</span> <span class=nx>Promise</span><span class=p>.</span><span class=nx>resolve</span><span class=p>(</span><span class=mi>4</span><span class=p>);</span>
+<span class=nx>hasThen</span><span class=p>.</span><span class=nx>then</span><span class=p>;</span>
+</code></pre></div><p>返回一个类型，指定允许访问的属性。</p>
+<h4 id=extract>Extract</h4>
+<h4 id=exclude>Exclude</h4>
+<h4 id=record>Record</h4>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2021-05-07</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/typescript/ data-title="TypeScript 补漏"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/typescript/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/typescript/ data-title="TypeScript 补漏"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/typescript/ data-title="TypeScript 补漏"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/typescript/ data-title="TypeScript 补漏"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/angular-%E4%B8%AD-rxjs-%E7%9A%84%E5%BA%94%E7%94%A8/ class=prev rel=prev title="Angular 中 RXJS 的应用"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Angular 中 RXJS 的应用</a>
+<a href=/posts/esxi/ class=next rel=next title="ESXI 相关配置">ESXI 相关配置<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

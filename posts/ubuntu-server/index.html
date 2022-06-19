@@ -1,0 +1,281 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>Ubuntu server - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="Ubuntu server">
+<meta property="og:description" content="Ubuntu server 用于一些自己写的智能家居服务和开源项目。 Ubuntu 安装 安装时以下个人配置 静态 IP name servers 没有添加，导致系统无法解析域名。 /etc/netplan/00-installer-config.yaml 文件用来配置网络 分区 默认分配">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/ubuntu-server/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-10-30T16:40:37+08:00">
+<meta property="article:modified_time" content="2021-10-30T16:40:37+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="Ubuntu server">
+<meta name=twitter:description content="Ubuntu server 用于一些自己写的智能家居服务和开源项目。 Ubuntu 安装 安装时以下个人配置 静态 IP name servers 没有添加，导致系统无法解析域名。 /etc/netplan/00-installer-config.yaml 文件用来配置网络 分区 默认分配">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/ubuntu-server/><link rel=prev href=https://blog.okten.cn/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%9C%AC-docker-%E4%B9%A6/><link rel=next href=https://blog.okten.cn/posts/windows-%E8%AE%BE%E7%BD%AE/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Ubuntu server","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/ubuntu-server\/"},"genre":"posts","wordcount":891,"url":"https:\/\/blog.okten.cn\/posts\/ubuntu-server\/","datePublished":"2021-10-30T16:40:37+08:00","dateModified":"2021-10-30T16:40:37+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Ubuntu server</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/all-in-one-server/><i class="far fa-folder fa-fw" aria-hidden=true></i>All In One Server</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2021-10-30>2021-10-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;891 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;2 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#ubuntu-安装>Ubuntu 安装</a>
+<ul>
+<li><a href=#静态-ip>静态 IP</a></li>
+<li><a href=#分区>分区</a></li>
+<li><a href=#额外服务>额外服务</a></li>
+</ul>
+</li>
+<li><a href=#samba-service>Samba service</a></li>
+<li><a href=#docker-安装>docker 安装</a></li>
+<li><a href=#安装-lms-提供-airplay-给-ha>安装 LMS 提供 airplay 给 HA</a></li>
+<li><a href=#code-server>code server</a>
+<ul>
+<li><a href=#docker-compose-部署>docker compose 部署</a></li>
+<li><a href=#nginx-代理-https>nginx 代理 https</a></li>
+</ul>
+</li>
+<li><a href=#mongodb>mongoDB</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=ubuntu-server>Ubuntu server</h1>
+<p>用于一些自己写的智能家居服务和开源项目。</p>
+<h2 id=ubuntu-安装>Ubuntu 安装</h2>
+<p>安装时以下个人配置</p>
+<h3 id=静态-ip>静态 IP</h3>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=../media/16355575177750/16355579818615.jpg data-srcset="../media/16355575177750/16355579818615.jpg, ../media/16355575177750/16355579818615.jpg 1.5x, ../media/16355575177750/16355579818615.jpg 2x" data-sizes=auto alt=../media/16355575177750/16355579818615.jpg title=../media/16355575177750/16355579818615.jpg></p>
+<p>name servers 没有添加，导致系统无法解析域名。
+<code>/etc/netplan/00-installer-config.yaml</code> 文件用来配置网络</p>
+<h3 id=分区>分区</h3>
+<p>默认分配一半空间给 root 和 boot，留一半 free space，重新分区。
+防止未来编译内核，给 boot 10 个 G。
+<img class=lazyload src=/svg/loading.min.svg data-src=../media/16355575177750/16355596791765.jpg data-srcset="../media/16355575177750/16355596791765.jpg, ../media/16355575177750/16355596791765.jpg 1.5x, ../media/16355575177750/16355596791765.jpg 2x" data-sizes=auto alt=../media/16355575177750/16355596791765.jpg title=../media/16355575177750/16355596791765.jpg></p>
+<h3 id=额外服务>额外服务</h3>
+<p>直接打开 open ssh server
+安装时可以使用 snap 安装 nextcloud 和 docker，但是 docker 使用中有一些问题，留着自己安装。</p>
+<h2 id=samba-service>Samba service</h2>
+<p>安装</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>sudo apt install samba samba-common
+</code></pre></div><p>创建目录配置权限</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd><span class=k>mkdir</span> /home/volumes
+chown nobody:nogroup /home/volumes
+chmod 777 /home/volumes
+</code></pre></div><p>配置 <code>/etc/samba/smb.conf</code></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>vim /etc/samba/smb.conf
+</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=p>[</span><span class=nx>Volumes</span><span class=p>]</span>
+  <span class=nx>comment</span> <span class=p>=</span> <span class=nx>TimeCapsule</span> <span class=nx>Volumes</span>
+  <span class=nx>path</span> <span class=p>=</span> <span class=err>/</span><span class=nx>home</span><span class=err>/</span><span class=nx>ten</span><span class=err>/</span><span class=nx>openwrt</span><span class=err>/</span><span class=nx>bin</span>
+  <span class=nx>browseable</span> <span class=p>=</span> <span class=nx>yes</span>
+  <span class=nx>writable</span> <span class=p>=</span> <span class=nx>yes</span>
+  <span class=nx>available</span> <span class=p>=</span> <span class=nx>yes</span>
+  <span class=nx>valid</span> <span class=nx>users</span> <span class=p>=</span> <span class=p>[</span><span class=nx>a</span> <span class=nx>user</span> <span class=nx>name</span><span class=p>]</span>
+</code></pre></div><p>添加用户</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>smbpasswd -a [a user name]
+</code></pre></div><p>重启服务</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>sudo service smbd restart
+</code></pre></div><h2 id=docker-安装>docker 安装</h2>
+<p>首先清理 docker</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>sudo apt-get remove docker docker-engine docker.io containerd runc
+</code></pre></div><p>安装</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>curl -fsSL https://download.docker.com/linux/ubuntu/gpg <span class=p>|</span> sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd><span class=k>echo</span> \
+  <span class=s2>&#34;deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \</span>
+  $(lsb_release -cs) stable<span class=s2>&#34; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span>
+</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+</code></pre></div><h2 id=安装-lms-提供-airplay-给-ha>安装 LMS 提供 airplay 给 HA</h2>
+<p>使用了别人的 docker compose</p>
+<pre tabindex=0><code>wget https://www.justplus.com.tw/uploads/7/6/7/0/76706939/docker-compose_lms.yml.zip
+</code></pre><p>解压 安装 docker-compose</p>
+<pre tabindex=0><code>docker-compose up -d
+</code></pre><h2 id=code-server>code server</h2>
+<p>以 code server 为例，部署 docker 项目的项目。</p>
+<h3 id=docker-compose-部署>docker compose 部署</h3>
+<p>docker-compose.yml</p>
+<pre tabindex=0><code>---
+version: &quot;2.1&quot;
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+      - PASSWORD= #optional
+      - HASHED_PASSWORD= #optional
+      - SUDO_PASSWORD= #optional
+      - SUDO_PASSWORD_HASH= #optional
+      - PROXY_DOMAIN=https:code.2019919.xyz #optional
+    volumes:
+      - /home/volumes/code_server:/config #直接将其文件放在SMB路径下，方便管理
+    ports:
+      - 8082:8443
+    restart: unless-stopped
+</code></pre><pre tabindex=0><code>docker-compose up -d
+</code></pre><h3 id=nginx-代理-https>nginx 代理 https</h3>
+<h4 id=安装-nginx>安装 nginx</h4>
+<pre tabindex=0><code>apt-get install nginx
+</code></pre><h4 id=上传证书>上传证书</h4>
+<p>直接将证书目录指定到 SMB 共享目录的 ssl 下方便每年维护</p>
+<h4 id=创建配置文件>创建配置文件</h4>
+<p>进入可用网站配置目录 <code>/etc/nginx/sites-available</code>，新建一个code-server文件 <code>vi code-server</code>
+添加以下内容</p>
+<pre tabindex=0><code>server {
+    # 填写nginx向公网开放的端口
+    listen 8083 ssl;
+    # 填写SSL证书对应的域名
+    server_name domain;
+
+    # SSL证书文件，请替换成对应的绝对路径和文件名
+    ssl_certificate /home/volumes/ssl/2021.pem;
+    # SSL证书密钥文件，请替换成对应的绝对路径和文件名
+    ssl_certificate_key /home/volumes/ssl/2021.key;
+    ssl_session_timeout 5m;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+
+    location / {
+      # 填写nginx代理的本地端口，请把端口替换成上面code-server配置的实际端口
+      proxy_pass http://localhost:8082/;
+      proxy_set_header Host $host;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection upgrade;
+      proxy_set_header Accept-Encoding gzip;
+    }
+
+    # 使用497状态码检测HTTP请求，自动转换为HTTPS
+    error_page 497 https://$host:$server_port$uri$is_args$args;
+}
+</code></pre><h4 id=应用配置>应用配置</h4>
+<pre tabindex=0><code>cd /etc/nginx
+
+# 把可用网站配置目录中的 code-server 配置拷贝到已启用网站配置目录
+cp sites-available/code-server sites-enabled/code-server
+
+# 删除已启用网站配置目录中的默认网站配置
+rm sites-enabled/default
+
+# 检查配置文件是否存在错误，不知道为啥软连接过来的文件显示不存在
+sudo nginx -t
+
+# 重新加载配置文件
+sudo nginx -s reload
+
+# 重启 nginx 服务
+sudo systemctl restart nginx
+</code></pre><p>OK，Https 访问。
+回头 electron 打包给 win mac ipadOS。</p>
+<h2 id=mongodb>mongoDB</h2>
+<pre tabindex=0><code>docker pull mongo
+</code></pre><p>将文件挂载到共享目录</p>
+<pre tabindex=0><code>docker run -p 27017:27017 -v /home/volumes/mongo:/data/db --name mongodb -d mongo
+</code></pre><div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=c># Use root/example as user/password credentials</span><span class=w>
+</span><span class=w></span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;3.1&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>services</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=nt>mongo</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mongo</span><span class=w>
+</span><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=m>27017</span><span class=p>:</span><span class=m>27017</span><span class=w>
+</span><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>MONGO_INITDB_ROOT_USERNAME</span><span class=p>:</span><span class=w> </span><span class=l>root</span><span class=w>
+</span><span class=w>      </span><span class=nt>MONGO_INITDB_ROOT_PASSWORD</span><span class=p>:</span><span class=w> </span><span class=l>example</span><span class=w>
+</span><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=c># folder where lms stores its data (cache, logs, prefs)</span><span class=w>
+</span><span class=w>      </span>- <span class=l>/home/volumes/mongo:/data/db</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=nt>mongo-express</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mongo-express</span><span class=w>
+</span><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=m>8084</span><span class=p>:</span><span class=m>8081</span><span class=w>
+</span><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>ME_CONFIG_MONGODB_ADMINUSERNAME</span><span class=p>:</span><span class=w> </span><span class=l>root</span><span class=w>
+</span><span class=w>      </span><span class=nt>ME_CONFIG_MONGODB_ADMINPASSWORD</span><span class=p>:</span><span class=w> </span><span class=l>example</span><span class=w>
+</span><span class=w>      </span><span class=nt>ME_CONFIG_MONGODB_URL</span><span class=p>:</span><span class=w> </span><span class=l>mongodb://root:example@mongo:27017/</span><span class=w>
+</span></code></pre></div></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2021-10-30</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/ubuntu-server/ data-title="Ubuntu server"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/ubuntu-server/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/ubuntu-server/ data-title="Ubuntu server"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/ubuntu-server/ data-title="Ubuntu server"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/ubuntu-server/ data-title="Ubuntu server"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%9C%AC-docker-%E4%B9%A6/ class=prev rel=prev title="我的第一本 Docker 书"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>我的第一本 Docker 书</a>
+<a href=/posts/windows-%E8%AE%BE%E7%BD%AE/ class=next rel=next title="Windows 注册表修改键盘映射">Windows 注册表修改键盘映射<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>通过函数声明和调用掌握函数的 this 值 - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="通过函数声明和调用掌握函数的 this 值">
+<meta property="og:description" content="通过函数声明和调用掌握函数的 this 值 函数的 this 对于基础薄弱的前端程序员一直是一个比较头疼的问题，在对 ES6 的模糊和对 ES6 之前的函数作用域不理解双重打击下">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-16T10:15:20+08:00">
+<meta property="article:modified_time" content="2021-01-16T10:15:20+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="通过函数声明和调用掌握函数的 this 值">
+<meta name=twitter:description content="通过函数声明和调用掌握函数的 this 值 函数的 this 对于基础薄弱的前端程序员一直是一个比较头疼的问题，在对 ES6 的模糊和对 ES6 之前的函数作用域不理解双重打击下">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/><link rel=prev href=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/><link rel=next href=https://blog.okten.cn/posts/javascript-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"通过函数声明和调用掌握函数的 this 值","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC\/"},"genre":"posts","wordcount":2393,"url":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC\/","datePublished":"2021-01-16T10:15:20+08:00","dateModified":"2021-01-16T10:15:20+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">通过函数声明和调用掌握函数的 this 值</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2021-01-16>2021-01-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;2393 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;5 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li>
+<ul>
+<li><a href=#间接调用>间接调用</a></li>
+<li><a href=#隐式调用>隐式调用</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=通过函数声明和调用掌握函数的-this-值>通过函数声明和调用掌握函数的 this 值</h1>
+<p>函数的 this 对于基础薄弱的前端程序员一直是一个比较头疼的问题，在对 ES6 的模糊和对 ES6 之前的函数作用域不理解双重打击下，往往无法区分 this 值到底是什么，因而在编写程序时常常需要通过测试当前作用域的 this 是什么，再去使用，甚至是某些公司严格规定哪种方式去实现。</p>
+<p>细细的看完了权威指南的第七版受益颇多，但是作者并没有拿出一个章节专门将相关内容进行汇总，这里就通过函数的声明和调用来总结下函数 this 值的几种情况。
+## 函数定义
+函数的定义有多种方式来适应不同的使用场景：</p>
+<ul>
+<li>函数声明语句</li>
+<li>函数表达式</li>
+<li>箭头函数</li>
+<li>嵌套函数</li>
+<li>应用函数的构造函数 Function()</li>
+</ul>
+<p>### 函数声明语句
+与大多数声明语句一样，以关键字 + 名称的形式来进行声明，函数用关键字 function 来声明：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>function</span> <span class=nx>testOutPut</span><span class=p>(){</span>
+    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Hello world!&#39;</span><span class=p>);</span>        
+<span class=p>}</span>
+</code></pre></div><p>函数声明语句是函数名变成一个变量，这个变量的值是函数本身。这里实际上是声明了一个 testOutPut 变量，并讲函数对象赋值给 testOutPut。在 JavaScript 的运行时中，函数对象创建于该函数所在作用域的代码开始执行之前，也就是说，在同一个上下文中，可以先执行函数调用再进行函数语句声明。只是第一个函数作为值的概念的应用场景。
+### 函数表达式
+函数表达式是一个赋值语句，将一个函数赋值给一个变量或常量。感觉函数表达式跟函数声明语句的运行时一样，但是如果先进行函数调用再进行函数表达式来定义函数将会异常。因为函数表达式在没有执行前并没有将函数赋值给变量，所以它也就不能被引用。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=nx>beforeDefined</span><span class=p>();</span>
+<span class=kd>let</span> <span class=nx>beforeDefined</span> <span class=o>=</span> <span class=kd>function</span><span class=p>(){</span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=mi>1</span><span class=p>);}</span>
+<span class=c1>// Uncaught ReferenceError: beforeDefined is not defined
+</span></code></pre></div><p>函数表达式的函数名称是可选项，如果给函数表达式添加一个函数名，那这个函数的<em>局部函数作用域内</em>会包含该属性的函数名的对象，其值绑定的是该函数：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>const</span> <span class=nx>f</span> <span class=o>=</span> <span class=kd>function</span> <span class=nx>fact</span><span class=p>(</span><span class=nx>x</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=nx>x</span> <span class=o>&lt;=</span> <span class=mi>1</span><span class=p>)</span> <span class=k>return</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=k>else</span> <span class=k>return</span> <span class=nx>x</span><span class=o>*</span><span class=nx>fact</span><span class=p>(</span><span class=nx>x</span><span class=o>-</span><span class=mi>1</span><span class=p>);</span>
+<span class=p>};</span>
+</code></pre></div><p>只有在函数局部作用域内会有这个对象，有点闭包的感觉。
+### 箭头函数
+箭头函数是 ES6 的新特性，在实际生产中非常常用。它支持很多简洁语法：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>const</span> <span class=nx>sum</span> <span class=o>=</span> <span class=p>(</span><span class=nx>x</span><span class=p>,</span> <span class=nx>y</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span> <span class=k>return</span> <span class=nx>x</span> <span class=o>+</span> <span class=nx>y</span><span class=p>;</span> <span class=p>};</span>
+<span class=kr>const</span> <span class=nx>sum</span> <span class=o>=</span> <span class=p>(</span><span class=nx>x</span><span class=p>,</span> <span class=nx>y</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>x</span> <span class=o>+</span> <span class=nx>y</span><span class=p>;</span>
+<span class=kr>const</span> <span class=nx>polynomial</span> <span class=o>=</span> <span class=nx>x</span> <span class=p>=&gt;</span> <span class=nx>x</span><span class=o>*</span><span class=nx>x</span> <span class=o>+</span> <span class=mi>2</span><span class=o>*</span><span class=nx>x</span> <span class=o>+</span> <span class=mi>3</span><span class=p>;</span>
+<span class=kr>const</span> <span class=nx>constantFunc</span> <span class=o>=</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=mi>42</span><span class=p>;</span>
+</code></pre></div><p>注意参数和箭头之间不能换行，否则会引起歧义。
+除此之外，它最大的特性就是它继承定义它环境的 this 值，我理解添加箭头函数的目的就是为了解决方法的嵌套函数 this 值为全局对象（严格模式下是 undefined）的缺陷：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>let</span> <span class=nx>o</span> <span class=o>=</span> <span class=p>{</span>
+    <span class=nx>a</span><span class=o>:</span><span class=mi>1</span><span class=p>,</span>
+    <span class=nx>m</span><span class=o>:</span><span class=kd>function</span><span class=p>(){</span>
+        <span class=kd>let</span> <span class=nx>self</span> <span class=o>=</span> <span class=k>this</span><span class=p>;</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span> <span class=o>===</span> <span class=nx>o</span><span class=p>);</span>
+        <span class=nx>f</span><span class=p>();</span>
+        <span class=kd>function</span> <span class=nx>f</span><span class=p>(){</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span> <span class=o>===</span> <span class=nx>o</span><span class=p>);</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>self</span> <span class=o>===</span> <span class=nx>o</span><span class=p>);</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span><span class=p>);</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+<span class=nx>o</span><span class=p>.</span><span class=nx>m</span><span class=p>();</span>
+<span class=c1>// true
+</span><span class=c1>// flase
+</span><span class=c1>// true
+</span><span class=c1>// Window{...}
+</span></code></pre></div><p>在 ES6 之前，我们需要通过闭包将 this 值保存在变量中使用，而有了箭头函数，可以直接继承 m 方法的 this 值：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=nx>o</span> <span class=o>=</span> <span class=p>{</span>
+    <span class=nx>a</span><span class=o>:</span><span class=mi>1</span><span class=p>,</span>
+    <span class=nx>m</span><span class=o>:</span><span class=kd>function</span><span class=p>(){</span>
+        <span class=kd>let</span> <span class=nx>self</span> <span class=o>=</span> <span class=k>this</span><span class=p>;</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span> <span class=o>===</span> <span class=nx>o</span><span class=p>);</span>
+        <span class=kr>const</span> <span class=nx>f</span> <span class=o>=</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span> <span class=o>===</span> <span class=nx>o</span><span class=p>);</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>self</span> <span class=o>===</span> <span class=nx>o</span><span class=p>);</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span><span class=p>);</span>
+        <span class=p>}</span>
+        <span class=nx>f</span><span class=p>();</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+<span class=nx>o</span><span class=p>.</span><span class=nx>m</span><span class=p>();</span>
+<span class=c1>// true
+</span><span class=c1>// true
+</span><span class=c1>// true
+</span><span class=c1>// {a: 1, m: ƒ}
+</span></code></pre></div><p>### 嵌套函数
+函数可以嵌套在其他函数内。嵌套函数可以访问包含它们函数的变量和参数（闭包）：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>function</span> <span class=nx>first</span><span class=p>(){</span>
+    <span class=kd>let</span> <span class=nx>strFirst</span> <span class=o>=</span> <span class=s2>&#34;first&#34;</span><span class=p>;</span>
+    <span class=nx>second</span><span class=p>();</span>
+    <span class=kd>function</span> <span class=nx>second</span><span class=p>(){</span>
+        <span class=kd>let</span> <span class=nx>strSecond</span> <span class=o>=</span> <span class=s2>&#34;second&#34;</span><span class=p>;</span>
+        <span class=nx>third</span><span class=p>();</span>
+        <span class=kd>function</span> <span class=nx>third</span><span class=p>(){</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>strFirst</span><span class=p>);</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>strSecond</span><span class=p>);</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+<span class=nx>first</span><span class=p>();</span>
+<span class=c1>// first
+</span><span class=c1>// second
+</span></code></pre></div><p>### Function() 构造函数创建函数
+Function() 函数的实参都是字符串，最后一个实参是函数体。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>const</span> <span class=nx>f</span> <span class=o>=</span> <span class=k>new</span> <span class=nb>Function</span><span class=p>(</span><span class=s2>&#34;x&#34;</span><span class=p>,</span> <span class=s2>&#34;y&#34;</span><span class=p>,</span> <span class=s2>&#34;return x*y;&#34;</span><span class=p>);</span>
+</code></pre></div><p>这里想到一个情况，当函数名相同时是否会报错：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>const</span> <span class=nx>f1</span> <span class=o>=</span> <span class=k>new</span> <span class=nb>Function</span><span class=p>(</span><span class=s2>&#34;x&#34;</span><span class=p>,</span> <span class=s2>&#34;x&#34;</span><span class=p>,</span> <span class=s2>&#34;return x;&#34;</span><span class=p>);</span>
+<span class=nx>f1</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span><span class=mi>2</span><span class=p>);</span>
+<span class=c1>// 2
+</span></code></pre></div><p>实际情况并没有，再次测试一下直接函数声明语句使用两个相同的参数，也没有报错：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>function</span> <span class=nx>f2</span><span class=p>(</span><span class=nx>x</span><span class=p>,</span><span class=nx>x</span><span class=p>,</span><span class=nx>y</span><span class=p>){</span><span class=k>return</span> <span class=nx>x</span><span class=o>*</span><span class=nx>y</span><span class=p>};</span>
+<span class=nx>f2</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span><span class=mi>2</span><span class=p>,</span><span class=mi>2</span><span class=p>);</span>
+<span class=c1>// 4
+</span></code></pre></div><p>这样看实际上跟函数外部用 var 声明的变量在函数中再次声明一个效果：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>var</span> <span class=nx>x</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+<span class=kd>function</span> <span class=nx>test</span><span class=p>(){</span><span class=kd>let</span> <span class=nx>x</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>x</span><span class=p>)};</span>
+<span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>x</span><span class=p>);</span>
+<span class=nx>test</span><span class=p>();</span>
+<span class=c1>// 1
+</span><span class=c1>// 2
+</span></code></pre></div><p>函数变量声明多个相相同的变量名时，传递的实参值将反复覆盖同名参数。
+Function() 构造函数非常重要的一点，就是它所创建的函数并不是使用词法作用域，相反，函数体代码的编译类似顶层函数，看书上的一个例子：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>let</span> <span class=nx>scope</span> <span class=o>=</span> <span class=s2>&#34;global&#34;</span><span class=p>;</span>
+<span class=kd>function</span> <span class=nx>constructFunction</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kd>let</span> <span class=nx>scope</span> <span class=o>=</span> <span class=s2>&#34;local&#34;</span><span class=p>;</span>
+    <span class=k>return</span> <span class=k>new</span> <span class=nb>Function</span><span class=p>(</span><span class=s2>&#34;return scope&#34;</span><span class=p>);</span>  <span class=c1>// Doesn&#39;t capture local scope!
+</span><span class=c1></span><span class=p>}</span>
+<span class=nx>constructFunction</span><span class=p>()();</span> 
+<span class=c1>// &#34;global&#34;
+</span></code></pre></div><p>## 函数调用
+函数调用和方法调用很常见就不再赘述，这里有三种很少使用的调用方式：</p>
+<ul>
+<li>构造函数调用</li>
+<li>间接调用</li>
+<li>隐式调用</li>
+</ul>
+<p>### 构造函数调用</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>function</span> <span class=nx>CreatObj</span><span class=p>(){</span>
+    <span class=k>this</span><span class=p>[</span><span class=s1>&#39;p&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=s2>&#34;property&#34;</span><span class=p>;</span>    
+<span class=p>}</span>
+<span class=nx>o</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>CreatObj</span><span class=p>();</span>
+<span class=c1>// CreatObj {p: &#34;property&#34;}
+</span></code></pre></div><p>构造函数创建一个新对象，并将这个对象作为它的上下文，也就是说构造函数中的 this 值是新创建的对象。
+构造函数通常没有 return 语句，当显示的用 return 语句返回一个对象时，构造函数创建的对象将变成它 return 的对象，其他情况当没有返回值或返回一个原始值时，返回值都被忽略，返回它新创建的对象。</p>
+<h3 id=间接调用>间接调用</h3>
+<p>JavaScript 万物接对象，对象就有自己的属性和方法。同理，函数也是对象，也有自己的方法和属性，而 call() 和 apply() 方法也可以用来间接调用函数。</p>
+<h4 id=call-方法>call() 方法</h4>
+<p>MDN 中对于 call() 的解释已经很明了了：</p>
+<blockquote>
+<p>The call() method calls a function with a given this value and arguments provided individually.</p>
+</blockquote>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=nx>f</span><span class=p>.</span><span class=nx>call</span><span class=p>(</span><span class=nx>o</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</code></pre></div><p>这里不过是将 o 对象作为函数 f 调用的上下文，并传入两个实参 1 和 2 作为实参列表，也就是说它等同与下面的代码：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=nx>o</span><span class=p>.</span><span class=nx>m</span> <span class=o>=</span> <span class=nx>f</span><span class=p>;</span>
+<span class=nx>o</span><span class=p>.</span><span class=nx>m</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+<span class=k>delete</span> <span class=nx>o</span><span class=p>.</span><span class=nx>m</span><span class=p>;</span>
+</code></pre></div><p>这里注意 delete 语句，目的就是说函数在使用 call 方法时只是临时将 o 作为 f 的上下文并调用。而函数还有个不涉及调用的方法 bind() 它可以返回一个新的函数对象，<code>f.bind(o);</code>，而这个对象将一直绑定 o 为函数 f 的 this 值。</p>
+<h4 id=apply-方法>apply() 方法</h4>
+<blockquote>
+<p>The apply() method calls a function with a given this value, and arguments provided as an array (or an array-like object).</p>
+</blockquote>
+<p>不难看出 apply() 和 call() 基本一致，只是实参以数组或者类似数组的对象进行传递。这里对类似数组的对象进行测试：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>function</span> <span class=nx>test</span><span class=p>(...</span><span class=nx>args</span><span class=p>){</span>
+    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span><span class=p>);</span>
+    <span class=k>for</span><span class=p>(</span><span class=nx>item</span> <span class=k>in</span> <span class=nx>args</span><span class=p>)</span> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>item</span><span class=p>);</span>
+<span class=p>}</span>
+<span class=kd>let</span> <span class=nx>o</span> <span class=o>=</span> <span class=p>{</span><span class=nx>a</span><span class=o>:</span><span class=mi>1</span><span class=p>};</span>
+<span class=kd>let</span> <span class=nx>likeArr</span> <span class=o>=</span> <span class=p>{</span><span class=nx>p1</span><span class=o>:</span><span class=mi>1</span><span class=p>,</span><span class=nx>p2</span><span class=o>:</span><span class=mi>2</span><span class=p>};</span>
+<span class=nx>likeArr</span><span class=p>.</span><span class=nx>length</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span>    
+<span class=kd>let</span> <span class=nx>unLikeArr</span> <span class=o>=</span> <span class=p>{</span><span class=nx>p1</span><span class=o>:</span><span class=mi>1</span><span class=p>,</span><span class=nx>p2</span><span class=o>:</span><span class=mi>2</span><span class=p>};</span>
+<span class=nx>test</span><span class=p>.</span><span class=nx>apply</span><span class=p>(</span><span class=nx>o</span><span class=p>,</span><span class=nx>likeArr</span><span class=p>);</span>
+<span class=c1>// {a: 1}
+</span><span class=c1>// 0
+</span><span class=c1>// 1
+</span><span class=c1></span><span class=nx>test</span><span class=p>.</span><span class=nx>apply</span><span class=p>(</span><span class=nx>o</span><span class=p>,</span><span class=nx>unLikeArr</span><span class=p>);</span>
+<span class=c1>// {a: 1}
+</span></code></pre></div><p>可见有了 length 的对象就被当作是类似数组的对象。</p>
+<h4 id=this-值>this 值</h4>
+<p>可见当 call() 和 apply() 调用函数时给函数绑定了一个上下文 this 值，但是箭头函数是个特例，它从它定义的位置的上下文继承 this 值。也就是说当给箭头函数定义的函数使用这两个方法时，第一个参数将被忽略：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>let</span> <span class=nx>o</span> <span class=o>=</span> <span class=p>{</span>
+    <span class=nx>a</span><span class=o>:</span> <span class=mi>1</span><span class=p>,</span>
+    <span class=nx>f</span><span class=o>:</span> <span class=kd>function</span><span class=p>(){</span>
+        <span class=kr>const</span> <span class=nx>oBind</span> <span class=o>=</span> <span class=p>{</span><span class=nx>b</span><span class=o>:</span><span class=mi>1</span><span class=p>};</span>
+        <span class=kr>const</span> <span class=nx>test</span> <span class=o>=</span> <span class=p>()=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=k>this</span><span class=p>);</span>
+        <span class=nx>test</span><span class=p>.</span><span class=nx>apply</span><span class=p>(</span><span class=nx>oBind</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+<span class=nx>o</span><span class=p>.</span><span class=nx>f</span><span class=p>();</span>
+<span class=c1>// {a: 1, f: ƒ}
+</span></code></pre></div><h3 id=隐式调用>隐式调用</h3>
+<ul>
+<li>getter 和 setter 方法在获取或者设置它的属性时可能被隐式调用。</li>
+<li>在对象进行字符串或者数值型和 BigInt 类型转换时，会隐式调用 toString() 和 valueOf() 方法。</li>
+<li>循环可迭代对象的元素时会产生很多方法调用。</li>
+<li>模板字符串可以调用函数。</li>
+<li>Proxy 对象的任何一个操作都会导致函数调用。</li>
+</ul>
+<p>## 关于函数 this 值的总结
+函数 this 值有以下几种情况：</p>
+<ul>
+<li>函数声明语句和函数表达式定义的函数，在非严格模式下 this 值永远是 global，严格模式下是 undefined。</li>
+<li>apply() call() bind() 方法用在非箭头函数时，第一个参数作为函数运行时的 this 值。</li>
+<li>箭头函数的 this 值永远继承于它所定义的位置的 this 值。</li>
+<li>对象的方法中 this 值是该对象的引用，嵌套在该对象中的函数不为方法，所以遵循函数的 this 值（global 或者 undefined）。</li>
+<li>构造函数的 this 值是新创建的对象。</li>
+</ul>
+<p>闭包只是参数和变量作用域的引用，与 this 值无关。</p>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2021-01-16</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/ data-title="通过函数声明和调用掌握函数的 this 值"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/ data-title="通过函数声明和调用掌握函数的 this 值"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/ data-title="通过函数声明和调用掌握函数的 this 值"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/ data-title="通过函数声明和调用掌握函数的 this 值"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/ class=prev rel=prev title="通过变量作用域深入了解 undefined"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>通过变量作用域深入了解 undefined</a>
+<a href=/posts/javascript-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/ class=next rel=next title="JavaScript 深浅拷贝">JavaScript 深浅拷贝<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

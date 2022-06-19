@@ -1,0 +1,266 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>通过变量作用域深入了解 undefined - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="通过变量作用域深入了解 undefined">
+<meta property="og:description" content="通过变量作用域深入了解 undefined undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2020-12-24T21:57:44+08:00">
+<meta property="article:modified_time" content="2020-12-24T21:57:44+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="通过变量作用域深入了解 undefined">
+<meta name=twitter:description content="通过变量作用域深入了解 undefined undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/><link rel=prev href=https://blog.okten.cn/posts/javascript-%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/><link rel=next href=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"通过变量作用域深入了解 undefined","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined\/"},"genre":"posts","wordcount":2030,"url":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined\/","datePublished":"2020-12-24T21:57:44+08:00","dateModified":"2020-12-24T21:57:44+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">通过变量作用域深入了解 undefined</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2020-12-24>2020-12-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;2030 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;5 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#函数作用域和声明提前>函数作用域和声明提前</a></li>
+<li><a href=#es6-块作用域>ES6 块作用域</a></li>
+<li><a href=#全局变量的本质>全局变量的本质</a></li>
+<li><a href=#深入理解-undefined-的本质>深入理解 undefined 的本质</a></li>
+<li><a href=#作用域链1>作用域链^1</a></li>
+<li><a href=#注>注</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=通过变量作用域深入了解-undefined>通过变量作用域深入了解 undefined</h1>
+<p>undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却并没有改变。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kc>undefined</span> <span class=o>=</span> <span class=mi>0</span>
+    <span class=c1>// 0
+</span><span class=c1></span>    <span class=kc>undefined</span>
+    <span class=c1>// undefined
+</span></code></pre></div><p>这回学习到了变量作用域，再结合之前学的对象的属性，深入了解下 undefined 到底什么时候会被篡改。</p>
+<h2 id=函数作用域和声明提前>函数作用域和声明提前</h2>
+<p>别的语言一般为块级作用域，JavaScript 取而代之使用了函数作用域：变量在声明它们的函数体以及这个函数体嵌套的任意函数体内都是有定义的。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kd>var</span> <span class=nx>a</span> <span class=o>=</span> <span class=kd>function</span> <span class=nx>test</span><span class=p>(</span><span class=nx>o</span><span class=p>){</span>
+        <span class=kd>var</span> <span class=nx>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>                          <span class=c1>// i在整个函数体内均是有定义的
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span><span class=k>typeof</span> <span class=nx>o</span> <span class=o>==</span> <span class=s2>&#34;object&#34;</span><span class=p>){</span>
+            <span class=kd>var</span> <span class=nx>j</span> <span class=o>=</span> <span class=mi>4</span><span class=p>;</span>                      <span class=c1>// j在函数体内是有定义的，不仅仅是在这个代码段内
+</span><span class=c1></span>            <span class=k>for</span><span class=p>(</span><span class=kd>var</span> <span class=nx>k</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span> <span class=nx>k</span> <span class=o>&lt;</span> <span class=mi>3</span><span class=p>;</span> <span class=nx>k</span><span class=o>++</span><span class=p>){</span>       <span class=c1>// k在函数体内是有定义的，不仅仅是在循环内
+</span><span class=c1></span>                <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>k</span><span class=p>);</span>             <span class=c1>// 输出数字0～2
+</span><span class=c1></span>            <span class=p>}</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>k</span><span class=p>);</span>                 <span class=c1>// k已经定义了，输出3
+</span><span class=c1></span>        <span class=p>}</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>k</span><span class=p>);</span>                     <span class=c1>// k已经定义了，输出3
+</span><span class=c1></span>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>j</span><span class=p>);</span>                     <span class=c1>// j已经定义了，输出4
+</span><span class=c1></span>    <span class=p>};</span>
+</code></pre></div><p>JavaScript 的这个特性被非正式地称为声明提前（hoisting），即 JavaScript 函数里声明的所有变量（但不涉及赋值）都被“提前”至函数体的顶部。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kd>var</span> <span class=nx>a</span> <span class=o>=</span> <span class=s1>&#39;1&#39;</span><span class=p>;</span>
+    <span class=kd>function</span> <span class=nx>f</span><span class=p>(){</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>a</span><span class=p>);</span>
+        <span class=kd>var</span> <span class=nx>a</span> <span class=o>=</span> <span class=s1>&#39;2&#39;</span><span class=p>;</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>a</span><span class=p>);</span>
+    <span class=p>}</span>
+</code></pre></div><p>由于函数作用域的特性，变量 a 的声明被提前到了整个函数体最前面，声明了但是没赋值，所以第一次 console 是 undefined。执行到 var 语句时才被赋值，这应该也是为什么可以一个变量多次 var 声明的原因，后面每一次 var 只是起到了赋值的作用。</p>
+<h2 id=es6-块作用域>ES6 块作用域</h2>
+<p>ES6 弥补了这这个概念，追加了 let 和 const，也就有了 {} 块作用域的概念，const 用来声明常量，这个就不提了，用上面的例子感受一下 let 和 var 的区别。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kd>var</span> <span class=nx>a</span> <span class=o>=</span> <span class=kd>function</span> <span class=nx>test</span><span class=p>(</span><span class=nx>o</span><span class=p>){</span>
+        <span class=kd>var</span> <span class=nx>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>                          <span class=c1>// i在整个函数体内均是有定义的
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span><span class=k>typeof</span> <span class=nx>o</span> <span class=o>==</span> <span class=s2>&#34;object&#34;</span><span class=p>){</span>
+            <span class=kd>let</span> <span class=nx>j</span> <span class=o>=</span> <span class=mi>4</span><span class=p>;</span>                      <span class=c1>// j在if块内是有定义的
+</span><span class=c1></span>            <span class=k>for</span><span class=p>(</span><span class=kd>var</span> <span class=nx>k</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span> <span class=nx>k</span> <span class=o>&lt;</span> <span class=mi>3</span><span class=p>;</span> <span class=nx>k</span><span class=o>++</span><span class=p>){</span>       <span class=c1>// k在函数体内是有定义的，不仅仅是在循环内
+</span><span class=c1></span>                <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>k</span><span class=p>);</span>             <span class=c1>// 输出数字0～2
+</span><span class=c1></span>                <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>j</span><span class=p>);</span>             <span class=c1>// j已经定义了，输出4
+</span><span class=c1></span>            <span class=p>}</span>
+            <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>k</span><span class=p>);</span>                 <span class=c1>// k已经定义了，输出3
+</span><span class=c1></span>        <span class=p>}</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>k</span><span class=p>);</span>                     <span class=c1>// k已经定义了，输出3
+</span><span class=c1></span>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>j</span><span class=p>);</span>                     <span class=c1>// j在块外，抛出异常Uncaught ReferenceError: j is not defined
+</span><span class=c1></span>    <span class=p>};</span>
+</code></pre></div><p>let 和 const 只有在块内是被声明的。</p>
+<h2 id=全局变量的本质>全局变量的本质</h2>
+<p>当声明一个 JavaScript 全局变量时，实际上是定义了全局对象的一个属性。当使用 var 声明一个变量时，创建的这个属性是不可配置的，无法通过 delete 运算符删除。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=nx>test</span> <span class=o>=</span><span class=mi>1</span>
+    <span class=c1>// 1
+</span><span class=c1></span>    <span class=nb>window</span><span class=p>.</span><span class=nx>test</span>
+    <span class=c1>// 1
+</span><span class=c1></span>    <span class=k>delete</span> <span class=nx>test</span>
+    <span class=c1>// true
+</span><span class=c1></span>    <span class=nb>window</span><span class=p>.</span><span class=nx>test</span>
+    <span class=c1>// undefined
+</span><span class=c1></span>    <span class=kd>var</span> <span class=nx>test</span> <span class=o>=</span> <span class=mi>1</span>
+    <span class=c1>// undefined
+</span><span class=c1></span>    <span class=nb>window</span><span class=p>.</span><span class=nx>test</span>
+    <span class=c1>// 1
+</span><span class=c1></span>    <span class=k>delete</span> <span class=nx>test</span>
+    <span class=c1>// false
+</span><span class=c1></span>    <span class=nb>window</span><span class=p>.</span><span class=nx>test</span>
+    <span class=c1>// 1
+</span></code></pre></div><p>可以看到当定义一个全局变量的时候他变成了 window 的属性。
+JavaScript 可以允许使用 this 关键字来引用全局对象，但是不能引用局部变量中存放的对象。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=k>this</span><span class=p>.</span><span class=nx>test</span>
+    <span class=c1>// 1
+</span></code></pre></div><h2 id=深入理解-undefined-的本质>深入理解 undefined 的本质</h2>
+<p>undefined 明明是个变量为什么赋值后无法使用呢。任何地方都可以直接使用 undefined，那他是一个全局变量一个全局的属性，事实也果然如此。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=nb>window</span><span class=p>.</span><span class=kc>undefined</span> <span class=o>==</span> <span class=kc>undefined</span>
+    <span class=c1>// true
+</span></code></pre></div><p>而属性分两类，他们的特征如下：</p>
+<ul>
+<li>数据属性
+<ul>
+<li>value：就是属性的值。</li>
+<li>writable：决定属性是否能被赋值。</li>
+<li>enumerable：决定 for in 能否枚举该属性。</li>
+<li>configurable：决定该属性能否被删除或者改变特征值。</li>
+</ul>
+</li>
+<li>访问器属性（getter/setter）
+<ul>
+<li>getter：函数或 undefined，在取属性值时被调用。</li>
+<li>setter：函数或 undefined，在设置属性值时被调用。</li>
+<li>enumerable：决定 for in 能否枚举该属性。</li>
+<li>configurable：决定该属性能否被删除或者改变特征值。
+查看下全局属性 undefined 的属性特征。</li>
+</ul>
+</li>
+</ul>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nb>Object</span><span class=p>.</span><span class=nx>getOwnPropertyDescriptor</span><span class=p>(</span><span class=nb>window</span><span class=p>,</span><span class=s1>&#39;undefined&#39;</span><span class=p>));</span>
+    <span class=c1>// configurable: false
+</span><span class=c1></span>    <span class=c1>// enumerable: false
+</span><span class=c1></span>    <span class=c1>// value: undefined
+</span><span class=c1></span>    <span class=c1>// writable: false
+</span></code></pre></div><p>writable：false，就是这个原因 undefined 虽然是个全局变量，但是我们赋值之后他并没有被改变。那为什么还需要用 void(0) 来代替 undefined 呢？结合上面的函数作用域再做一个实验。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kd>function</span> <span class=nx>test</span><span class=p>()</span> <span class=p>{</span>
+        <span class=kd>var</span> <span class=kc>undefined</span> <span class=o>=</span> <span class=mi>100</span><span class=p>;</span> 
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=kc>undefined</span><span class=p>);</span>
+        <span class=kd>var</span> <span class=nx>obj</span> <span class=o>=</span> <span class=p>{</span><span class=nx>a</span> <span class=o>:</span> <span class=kc>undefined</span><span class=p>};</span> 
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nb>Object</span><span class=p>.</span><span class=nx>getOwnPropertyDescriptor</span><span class=p>(</span><span class=nx>obj</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=p>));</span>
+    <span class=p>}</span>
+    <span class=nx>test</span><span class=p>();</span>
+    <span class=c1>// 100
+</span><span class=c1></span>    <span class=c1>// configurable: true
+</span><span class=c1></span>    <span class=c1>// enumerable: true
+</span><span class=c1></span>    <span class=c1>// value: 100
+</span><span class=c1></span>    <span class=c1>// writable: true
+</span></code></pre></div><p>在函数作用域中，undefined 被从声明并赋值为 100，无论是直接 console 它自己还是去查看 undefined 属性特性都能看出，undefined 变量被修改了。这也就说在函数作用域内 undefined 可以被修改。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kd>function</span> <span class=nx>test</span><span class=p>()</span> <span class=p>{</span>
+        <span class=kr>const</span> <span class=kc>undefined</span> <span class=o>=</span> <span class=mi>100</span><span class=p>;</span> 
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=kc>undefined</span><span class=p>);</span>
+        <span class=kr>const</span> <span class=nx>obj</span> <span class=o>=</span> <span class=p>{</span><span class=nx>a</span> <span class=o>:</span> <span class=kc>undefined</span><span class=p>};</span> 
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nb>Object</span><span class=p>.</span><span class=nx>getOwnPropertyDescriptor</span><span class=p>(</span><span class=nx>obj</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=p>));</span>
+        <span class=nx>test</span><span class=p>();</span>
+    <span class=p>}</span>
+    <span class=c1>// 100
+</span><span class=c1></span>    <span class=c1>// configurable: true
+</span><span class=c1></span>    <span class=c1>// enumerable: true
+</span><span class=c1></span>    <span class=c1>// value: 100
+</span><span class=c1></span>    <span class=c1>// writable: true
+</span></code></pre></div><p>块作用域内也一样可以被修改，得出结论 undefined 是一个类似 var 声明一样可以被重复声明的全局属性，而他的属性特性 writable 是 false，所以不能被修改，但是在非全局作用域内，他是可以被篡改的，这时候就要注意用 void (0) 来替代 undefined。</p>
+<h2 id=作用域链1>作用域链^1</h2>
+<p>以书中的角度用对象属性去看作用域链：</p>
+<ul>
+<li>JavaScript最顶层的代码，其作用域链只有一个全局对象。</li>
+</ul>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=../media/16088182648987/16556418348507.jpg data-srcset="../media/16088182648987/16556418348507.jpg, ../media/16088182648987/16556418348507.jpg 1.5x, ../media/16088182648987/16556418348507.jpg 2x" data-sizes=auto alt=../media/16088182648987/16556418348507.jpg title=../media/16088182648987/16556418348507.jpg></p>
+<ul>
+<li>不包含嵌套的函数，其作用域两个对象：函数自身的变量对象和全局对象。</li>
+</ul>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=../media/16088182648987/16556418584659.jpg data-srcset="../media/16088182648987/16556418584659.jpg, ../media/16088182648987/16556418584659.jpg 1.5x, ../media/16088182648987/16556418584659.jpg 2x" data-sizes=auto alt=../media/16088182648987/16556418584659.jpg title=../media/16088182648987/16556418584659.jpg></p>
+<blockquote>
+<p>活动对象(activation object)，该对象包含了函数的所有局部变量、命名参数、参数集合以及this，然后此对象会被推入作用域链的前端</p>
+</blockquote>
+<ul>
+<li>对于包含了嵌套函数的函数，其作用域包含至少三个对象：自身的变量对象，外层的变量对象（将自身嵌套的函数），全局变量对象。</li>
+</ul>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=../media/16088182648987/16556418835132.jpg data-srcset="../media/16088182648987/16556418835132.jpg, ../media/16088182648987/16556418835132.jpg 1.5x, ../media/16088182648987/16556418835132.jpg 2x" data-sizes=auto alt=../media/16088182648987/16556418835132.jpg title=../media/16088182648987/16556418835132.jpg></p>
+<p>作用域链给我的感觉类似原型链，将函数的上下文构成了链表的形式，而方法执行时一层一层往外找，所以为了方便链表从上到下查找属性，所以有了声明提前，链表最顶端为嵌套函数的最里层，链表最底端则是全局变量对象。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kd>function</span> <span class=nx>test</span><span class=p>(){</span>
+        <span class=kd>var</span> <span class=nx>fun1</span><span class=p>,</span><span class=nx>fun2</span><span class=p>;</span>
+        <span class=k>for</span><span class=p>(</span><span class=kd>var</span> <span class=nx>i</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span><span class=nx>i</span><span class=o>&lt;</span><span class=mi>2</span><span class=p>;</span><span class=nx>i</span><span class=o>++</span><span class=p>){</span>
+            <span class=k>if</span><span class=p>(</span><span class=nx>i</span> <span class=o>===</span> <span class=mi>0</span><span class=p>){</span>
+                <span class=nx>fun1</span> <span class=o>=</span> <span class=kd>function</span><span class=p>(){</span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;fun1:i=&#39;</span><span class=o>+</span><span class=nx>i</span><span class=p>)};</span>
+            <span class=p>}</span>
+            <span class=k>if</span><span class=p>(</span><span class=nx>i</span> <span class=o>===</span> <span class=mi>1</span><span class=p>){</span>
+                <span class=nx>fun2</span> <span class=o>=</span> <span class=kd>function</span><span class=p>(){</span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;fun2:i=&#39;</span><span class=o>+</span><span class=nx>i</span><span class=p>)};</span>
+            <span class=p>}</span>
+        <span class=p>};</span>
+        <span class=nx>fun1</span><span class=p>();</span>
+        <span class=nx>fun2</span><span class=p>();</span>
+    <span class=p>}</span><span class=err>∫</span>
+    <span class=nx>test</span><span class=p>();</span>
+    <span class=c1>// fun1:i=2
+</span><span class=c1></span>    <span class=c1>// fun2:i=2
+</span></code></pre></div><h2 id=注>注</h2>
+<ol>
+<li>在看 JavaScript 权威指南第七版第八章时发现作者将原来的作用域链的“链”字都删除了，变成了作用域，但是还没有看前面作用域相关内容，应该有新的理解，在完成翻译后再继续补全。</li>
+</ol>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2020-12-24</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/ data-title="通过变量作用域深入了解 undefined"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/ data-title="通过变量作用域深入了解 undefined"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/ data-title="通过变量作用域深入了解 undefined"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/ data-title="通过变量作用域深入了解 undefined"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/javascript-%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/ class=prev rel=prev title="JavaScript 原型和原型链"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>JavaScript 原型和原型链</a>
+<a href=/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/ class=next rel=next title="通过函数声明和调用掌握函数的 this 值">通过函数声明和调用掌握函数的 this 值<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

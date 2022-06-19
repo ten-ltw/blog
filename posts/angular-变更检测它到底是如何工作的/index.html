@@ -1,0 +1,350 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>Angular 变更检测——它到底是如何工作的？ - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="Angular 变更检测——它到底是如何工作的？">
+<meta property="og:description" content="Angular 变更检测——它到底是如何工作的？ 原文：Angular Change Detection - How Does It Really Work? 与 AngularJs 中的等效方法相比，Angular 变更检测机制更加透明且易于推理。但">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-03-23T19:41:26+08:00">
+<meta property="article:modified_time" content="2021-03-23T19:41:26+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="Angular 变更检测——它到底是如何工作的？">
+<meta name=twitter:description content="Angular 变更检测——它到底是如何工作的？ 原文：Angular Change Detection - How Does It Really Work? 与 AngularJs 中的等效方法相比，Angular 变更检测机制更加透明且易于推理。但">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/><link rel=prev href=https://blog.okten.cn/posts/states-and-fates/><link rel=next href=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Angular 变更检测——它到底是如何工作的？","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84\/"},"genre":"posts","wordcount":4539,"url":"https:\/\/blog.okten.cn\/posts\/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84\/","datePublished":"2021-03-23T19:41:26+08:00","dateModified":"2021-03-23T19:41:26+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Angular 变更检测——它到底是如何工作的？</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2021-03-23>2021-03-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;4539 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;10 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#变更检测是如何实现的>变更检测是如何实现的</a>
+<ul>
+<li><a href=#重写浏览器默认机制>重写浏览器默认机制</a></li>
+<li><a href=#低级运行时补丁是如何工作的>低级运行时补丁是如何工作的？</a></li>
+<li><a href=#支持浏览器异步-api>支持浏览器异步 API</a></li>
+<li><a href=#变更检测树>变更检测树</a></li>
+<li><a href=#todo-item-变更检测器是什么样子的>Todo Item 变更检测器是什么样子的？</a></li>
+</ul>
+</li>
+<li><a href=#默认变更检测机制如何工作>默认变更检测机制如何工作？</a>
+<ul>
+<li><a href=#嵌套对象的-owner-如何处理>嵌套对象的 <code>owner</code> 如何处理？</a></li>
+<li><a href=#为什么默认情况下变更检测如此工作>为什么默认情况下变更检测如此工作？</a></li>
+<li><a href=#引用如何比较>引用如何比较?</a></li>
+<li><a href=#性能如何>性能如何？</a></li>
+<li><a href=#快速浏览虚拟机内部>快速浏览虚拟机内部</a></li>
+</ul>
+</li>
+<li><a href=#onpush-变更检测模式>OnPush 变更检测模式</a>
+<ul>
+<li><a href=#onpush-真的只是通过引用比较比较输入吗><code>OnPush</code> 真的只是通过引用比较比较输入吗?</a></li>
+<li><a href=#使用-immutablejs-简化-angular-应用程序的构建>使用 Immutable.js 简化 Angular 应用程序的构建</a></li>
+</ul>
+</li>
+<li><a href=#避免变更检测循环生产与开发模式>避免变更检测循环：生产与开发模式</a>
+<ul>
+<li><a href=#如何在angular中触发变更检测循环>如何在Angular中触发变更检测循环？</a></li>
+<li><a href=#变更检测问题经常发生吗>变更检测问题经常发生吗？</a></li>
+</ul>
+</li>
+<li><a href=#打开--关闭变更检测并手动触发>打开 / 关闭变更检测并手动触发</a></li>
+<li><a href=#总结>总结</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=angular-变更检测它到底是如何工作的>Angular 变更检测——它到底是如何工作的？</h1>
+<p>原文：<a href=https://blog.angular-university.io/how-does-angular-2-change-detection-really-work/ target=_blank rel="noopener noreffer">Angular Change Detection - How Does It Really Work?</a></p>
+<p>与 AngularJs 中的等效方法相比，Angular 变更检测机制更加透明且易于推理。但是，在某些情况下（例如进行性能优化时），我们的确需要了解底层做了什么。因此，让我们通过研究以下主题来更深入地研究变更检测：</p>
+<ul>
+<li>变更检测是如何实现的？</li>
+<li>Angular 变更检测器是什么样的，我能看到它吗？</li>
+<li>默认变更检测机制如何工作</li>
+<li>打开 / 关闭变更检测，并手动触发</li>
+<li>避免变更检测循环：生产与开发模式</li>
+<li><code>OnPush</code> 变更检测模式到底做了什么？</li>
+<li>使用 Immutable.js 简化 Angular 应用程序的构建</li>
+<li>总结</li>
+</ul>
+<p>如果你在寻找更多关于 <code>OnPush</code> 变更检测的信息，看一下这篇文章 <a href=https://blog.angular-university.io/onpush-change-detection-how-it-works target=_blank rel="noopener noreffer">Angular OnPush Change Detection and Component Design - Avoid Common Pitfalls</a>。</p>
+<h2 id=变更检测是如何实现的>变更检测是如何实现的</h2>
+<p>Angular 可以检测组件数据何时变更，然后自动重新渲染视图以反映该变更。但是，如何在诸如单击按钮之类的低级事件发生之后做到这一点，这可以在页面任何地方发生吗？</p>
+<p>要了解它是如何工作的，我们首先需要意识到在 JavaScript 中整个运行时可以被设计重写。如果需要，我们可以重写 <code>String</code> 或 <code>Number</code> 中的函数。</p>
+<h3 id=重写浏览器默认机制>重写浏览器默认机制</h3>
+<p>Angular 在启动时会修补几个低级浏览器 API，例如 <code>addEventListener</code>，这是用于注册所有浏览器事件（包括单击处理程序）的浏览器功能。Angular 会用下面等效的新版本替换 <code>addEventListener</code>：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=c1>// this is the new version of addEventListener
+</span><span class=c1></span><span class=kd>function</span> <span class=nx>addEventListener</span><span class=p>(</span><span class=nx>eventName</span><span class=p>,</span> <span class=nx>callback</span><span class=p>)</span> <span class=p>{</span>
+     <span class=c1>// call the real addEventListener
+</span><span class=c1></span>     <span class=nx>callRealAddEventListener</span><span class=p>(</span><span class=nx>eventName</span><span class=p>,</span> <span class=kd>function</span><span class=p>()</span> <span class=p>{</span>
+        <span class=c1>// first call the original callback
+</span><span class=c1></span>        <span class=nx>callback</span><span class=p>(...);</span>     
+        <span class=c1>// and then run Angular-specific functionality
+</span><span class=c1></span>        <span class=kd>var</span> <span class=nx>changed</span> <span class=o>=</span> <span class=nx>angular</span><span class=p>.</span><span class=nx>runChangeDetection</span><span class=p>();</span>
+         <span class=k>if</span> <span class=p>(</span><span class=nx>changed</span><span class=p>)</span> <span class=p>{</span>
+             <span class=nx>angular</span><span class=p>.</span><span class=nx>reRenderUIPart</span><span class=p>();</span>
+         <span class=p>}</span>
+     <span class=p>});</span>
+<span class=p>}</span>
+</code></pre></div><p>新版本的 <code>addEventListener</code> 为任何事件处理程序增加了更多功能：其不仅调用已注册的回调，而且 Angular 还可以运行变更检测并更新 UI。</p>
+<h3 id=低级运行时补丁是如何工作的>低级运行时补丁是如何工作的？</h3>
+<p>浏览器 API 的低级补丁是由 Angular 的 <a href=https://github.com/angular/zone.js/ target=_blank rel="noopener noreffer">Zone.js</a> 库完成的。了解什么是 zone 很重要。</p>
+<p>zone 无非是一个执行上下文，它可以在多个 JavaScript VM <sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup>执行回合后幸存下来。这是一种通用机制，我们可以用来向浏览器添加额外的功能。Angular 用 Zone 来触发变更检测，但另一种可能的用途是进行应用程序性能分析，或跟踪跨多个 VM 轮次运行的长堆栈跟踪。</p>
+<h3 id=支持浏览器异步-api>支持浏览器异步 API</h3>
+<p>修补以下常用的浏览器机制，以支持变更检测：</p>
+<ul>
+<li>全部浏览器事件（click、mouseover、keyup 等）</li>
+<li><code>setTimeout()</code> 和 <code>setInterval()</code></li>
+<li>Ajax HTTP 请求</li>
+</ul>
+<p>实际上，Zone.js 修补了许多其他浏览器 API，以明了地触发 Angular 变更检测，例如 Websockets。看看<a href=https://github.com/angular/zone.js/tree/master/test/patch target=_blank rel="noopener noreffer"> Zone.js 测试说明</a>来了解当前支持的功能。</p>
+<p>这种机制的局限性之一在于，如果由于某些原因 Zone.js 不支持异步浏览器 API，那么将不会触发变更检测。例如，IndexedDB 回调就是这种情况。</p>
+<p>这就解释了变更检测是如何触发的，但是一旦触发，它实际上如何工作？</p>
+<h3 id=变更检测树>变更检测树</h3>
+<p>每个 Angular 组件都有一个关联的创建于应用程序启动时的变更检测器。例如下面 <code>TodoItem</code> 组件：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=err>@</span><span class=nx>Component</span><span class=p>({</span>
+    <span class=nx>selector</span><span class=o>:</span> <span class=s1>&#39;todo-item&#39;</span><span class=p>,</span>
+    <span class=nx>template</span><span class=o>:</span> <span class=sb>`&lt;span class=&#34;todo noselect&#34; 
+</span><span class=sb>       (click)=&#34;onToggle()&#34;&gt;{{todo.owner.firstname}} - {{todo.description}}
+</span><span class=sb>       - completed: {{todo.completed}}&lt;/span&gt;`</span>
+<span class=p>})</span>
+<span class=kr>export</span> <span class=kr>class</span> <span class=nx>TodoItem</span> <span class=p>{</span>
+    <span class=err>@</span><span class=nx>Input</span><span class=p>()</span>
+    <span class=nx>todo</span><span class=o>:</span><span class=nx>Todo</span><span class=p>;</span>
+
+    <span class=err>@</span><span class=nx>Output</span><span class=p>()</span>
+    <span class=nx>toggle</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>EventEmitter</span><span class=o>&lt;</span><span class=nb>Object</span><span class=o>&gt;</span><span class=p>();</span>
+
+    <span class=nx>onToggle</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=nx>toggle</span><span class=p>.</span><span class=nx>emit</span><span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>todo</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>如果切换 Todo 状态，则此组件将接收 Todo 对象作为输入并发生事件。为了使示例更有趣，<a href=https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo.ts#L11 target=_blank rel="noopener noreffer">Todo 类</a>包含嵌套对象：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=kr>export</span> <span class=kr>class</span> <span class=nx>Todo</span> <span class=p>{</span>
+    <span class=nx>constructor</span><span class=p>(</span><span class=kr>public</span> <span class=nx>id</span><span class=o>:</span> <span class=nx>number</span><span class=p>,</span> 
+        <span class=kr>public</span> <span class=nx>description</span><span class=o>:</span> <span class=nx>string</span><span class=p>,</span> 
+        <span class=kr>public</span> <span class=nx>completed</span><span class=o>:</span> <span class=kr>boolean</span><span class=p>,</span> 
+        <span class=kr>public</span> <span class=nx>owner</span><span class=o>:</span> <span class=nx>Owner</span><span class=p>)</span> <span class=p>{</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>我们可以看到 Todo 有一个属性 <code>owner</code>，它本身是一个具有两个属性的对象：firstname 和 lastname。</p>
+<h3 id=todo-item-变更检测器是什么样子的>Todo Item 变更检测器是什么样子的？</h3>
+<p>我们实际上可以在运行时看到变更检测器的外观！ 可以通过访问某个属性查看它，只需在 Todo 类中添加一些代码以[触发断点](<a href=https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo target=_blank rel="noopener noreffer">https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo</a> .ts＃L11)。</p>
+<p>执行到断点时，我们可以遍历堆栈跟踪并查看实际的变更检测：</p>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=https://raw.githubusercontent.com/jhades/blog.angular-university.io/master/ng2-change-detection/images/change.jpg data-srcset="https://raw.githubusercontent.com/jhades/blog.angular-university.io/master/ng2-change-detection/images/change.jpg, https://raw.githubusercontent.com/jhades/blog.angular-university.io/master/ng2-change-detection/images/change.jpg 1.5x, https://raw.githubusercontent.com/jhades/blog.angular-university.io/master/ng2-change-detection/images/change.jpg 2x" data-sizes=auto alt=https://raw.githubusercontent.com/jhades/blog.angular-university.io/master/ng2-change-detection/images/change.jpg title="What does an Angular change detector look like"></p>
+<p>不用担心，你将永远不必调试此代码！也不涉及任何魔术，它只是在应用程序启动时构建的普通 JavaScript 方法。但是它是做什么的呢？</p>
+<h2 id=默认变更检测机制如何工作>默认变更检测机制如何工作？</h2>
+<p>乍一看，此方法可能看起来很奇怪，并且其全部变量命名奇怪。但是，通过更深入地研究它，我们发现它的操作非常简单：对于模板中使用的每个表达式，它会将表达式中使用的属性的当前值与该属性的先前值进行比较。</p>
+<p>如果前后的属性值不同，它将把 isChanged 设置为 true，就是这样！差不多了，它是通过使用名为 <code>looseNotIdentical()</code> 的方法进行值比较，使用 <code>===</code> 比较但指定 NaN 相等逻辑（请参阅 [here](<a href=https://github.com/angular/angular/blob/50548fb5655bca742d1056ea91217a3b8460db08/modules/ target=_blank rel="noopener noreffer">https://github.com/angular/angular/blob/50548fb5655bca742d1056ea91217a3b8460db08/modules/</a> angular2 / src / facade / lang.ts＃L367)）。</p>
+<h3 id=嵌套对象的-owner-如何处理>嵌套对象的 <code>owner</code> 如何处理？</h3>
+<p>我们可以在变更检测器代码中看到 <code>owner</code> 嵌套对象的属性同样被检测差异。但是只比较 firstname 属性，不比较 lastname 属性。</p>
+<p>这是因为组件模板中未使用 lastname （请参阅 <a href=https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo_item.ts#L7 target=_blank rel="noopener noreffer">here</a>）！ 同样，出于相同原因，未比较 Todo 的顶级 id 属性。这样，我们可以放心地说：</p>
+<blockquote>
+<p>默认情况下，Angular 变更检测通过检测模板表达式的值是否已更改来工作。这是针对所有组件都做的处理。</p>
+</blockquote>
+<p>我们还可以得出以下结论：</p>
+<blockquote>
+<p>默认情况下，Angular 不会进行深度对象比较来检测变更，它仅考虑模板使用的属性。</p>
+</blockquote>
+<h3 id=为什么默认情况下变更检测如此工作>为什么默认情况下变更检测如此工作？</h3>
+<p>Angular 的主要目标之一是更加透明和易于使用，从而使框架用户不必费劲地调试框架并了解内部机制，就能够有效地使用它。</p>
+<p>如果你熟悉 AngularJs，想象一下 <code>$digest()</code> 和 <code>$apply()</code> 以及何时使用它们或不使用它们的所有陷阱。Angular 的主要目标之一就是避免这种情况。</p>
+<h3 id=引用如何比较>引用如何比较?</h3>
+<p>事实上 Javascript 对象是可变的，Angular 希望为这些对象提供开箱即用的全面支持。</p>
+<p>想象一下，如果 Angular 默认变更检测机制将基于组件输入的引用比较而不是默认机制，那将会是什么样子？ 即使是像 TODO 应用程序这样简单的东西，构建起来也很棘手：开发人员必须非常小心地创建新的 Todo，而不是简单地更新属性。</p>
+<p>但是，正如我们将看到的，如果我们确实需要的话，仍然可以自定义 Angular 变更检测。</p>
+<h3 id=性能如何>性能如何？</h3>
+<p>请注意，todo list 组件的变更检测器如何显式引用 <code>todos</code> 属性。</p>
+<p>做到这一点的另一种方法是在组件的属性之间动态循环，从而使代码通用而不是特定于组件。这样，我们就不必在启动时为每个组件构建一个变更检测器！ 那么这是怎样一回事呢？</p>
+<h3 id=快速浏览虚拟机内部>快速浏览虚拟机内部</h3>
+<p>所有这些都与 Javascript 虚拟机的工作方式有关。尽管通常 VM 即时编译器无法轻易地将用于动态比较属性的代码优化为本机代码。</p>
+<p>这与变更检测器的特定代码不同，变更检测器确实显式访问每个组件输入属性。该代码非常类似于我们手工编写的代码，并且很容易被虚拟机转换为本地代码。</p>
+<p>使用生成的显式的检测器的最终结果是一种变化检测机制，该机制非常快（比 AngularJs 更快），可预测且易于推理。</p>
+<p>但是，如果遇到性能困境，是否有一种方法可以优化变更检测？</p>
+<h2 id=onpush-变更检测模式>OnPush 变更检测模式</h2>
+<p>如果我们的 Todo list 真的很大，我们可以配置 <a href=https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo_list.ts target=_blank rel="noopener noreffer">TodoList</a> 组件仅在 Todo list 变更时才进行更新。这可以通过将组件变更检测策略改为 <code>OnPush</code> 来完成：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=err>@</span><span class=nx>Component</span><span class=p>({</span>
+    <span class=nx>selector</span><span class=o>:</span> <span class=s1>&#39;todo-list&#39;</span><span class=p>,</span>
+    <span class=nx>changeDetection</span><span class=o>:</span> <span class=nx>ChangeDetectionStrategy</span><span class=p>.</span><span class=nx>OnPush</span><span class=p>,</span>
+    <span class=nx>template</span><span class=o>:</span> <span class=p>...</span>
+<span class=p>})</span>
+<span class=kr>export</span> <span class=kr>class</span> <span class=nx>TodoList</span> <span class=p>{</span>
+    <span class=p>...</span>
+<span class=p>}</span>
+</code></pre></div><p>现在让我们给应用程序添加一对按钮：一个按钮通过直接对列表的第一条进行改变来切换，另一个按钮将 Todo 添加到整个列表中。代码如下：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=err>@</span><span class=nx>Component</span><span class=p>({</span>
+    <span class=nx>selector</span><span class=o>:</span> <span class=s1>&#39;app&#39;</span><span class=p>,</span>
+    <span class=nx>template</span><span class=o>:</span> <span class=sb>`&lt;div&gt;
+</span><span class=sb>                    &lt;todo-list [todos]=&#34;todos&#34;&gt;&lt;/todo-list&gt;
+</span><span class=sb>               &lt;/div&gt;
+</span><span class=sb>               &lt;button (click)=&#34;toggleFirst()&#34;&gt;Toggle First Item&lt;/button&gt;
+</span><span class=sb>               &lt;button (click)=&#34;addTodo()&#34;&gt;Add Todo to List&lt;/button&gt;`</span>
+<span class=p>})</span>
+<span class=kr>export</span> <span class=kr>class</span> <span class=nx>App</span> <span class=p>{</span>
+    <span class=nx>todos</span><span class=o>:</span><span class=nb>Array</span> <span class=o>=</span> <span class=nx>initialData</span><span class=p>;</span>
+
+    <span class=nx>constructor</span><span class=p>()</span> <span class=p>{</span>
+    <span class=p>}</span>
+
+    <span class=nx>toggleFirst</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=nx>todos</span><span class=p>[</span><span class=mi>0</span><span class=p>].</span><span class=nx>completed</span> <span class=o>=</span> <span class=o>!</span> <span class=k>this</span><span class=p>.</span><span class=nx>todos</span><span class=p>[</span><span class=mi>0</span><span class=p>].</span><span class=nx>completed</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nx>addTodo</span><span class=p>()</span> <span class=p>{</span>
+        <span class=kd>let</span> <span class=nx>newTodos</span> <span class=o>=</span> <span class=k>this</span><span class=p>.</span><span class=nx>todos</span><span class=p>.</span><span class=nx>slice</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+        <span class=nx>newTodos</span><span class=p>.</span><span class=nx>push</span><span class=p>(</span> <span class=k>new</span> <span class=nx>Todo</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=s2>&#34;TODO 4&#34;</span><span class=p>,</span> 
+            <span class=kc>false</span><span class=p>,</span> <span class=k>new</span> <span class=nx>Owner</span><span class=p>(</span><span class=s2>&#34;John&#34;</span><span class=p>,</span> <span class=s2>&#34;Doe&#34;</span><span class=p>)));</span>
+        <span class=k>this</span><span class=p>.</span><span class=nx>todos</span> <span class=o>=</span> <span class=nx>newTodos</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>现在让我们看看两个新按钮的行为：</p>
+<ul>
+<li>第一个按钮“Toggle First Item”不起作用！ 这是因为 <code>toggleFirst()</code> 方法直接使列表的元素发生改变。
+<code>TodoList</code> 无法检测到它，因为它的输入引用 <code>todos</code> 没有改变。</li>
+<li>第二个按钮确实起作用！ 请注意，方法 <code>addTodo()</code> 创建了 todo list 的副本，然后向该副本添加了一个项目，最后用复制的 list 替换了 todos 成员变量。这会触发变更检测，因为该组件在其输入中检测到引用变更：它收到了一个新列表！</li>
+<li>在第二个按钮中，直接修改 todo list 将不起作用！我们需要一个新列表。</li>
+</ul>
+<h3 id=onpush-真的只是通过引用比较比较输入吗><code>OnPush</code> 真的只是通过引用比较比较输入吗?</h3>
+<p>事实并非如此，如果你尝试通过单击来切换 todo，它仍然可以使用！即使你将 <a href=https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo_item.ts target=_blank rel="noopener noreffer">TodoItem</a> 也切换为 <code>OnPush</code>。这是因为 <code>OnPush</code> 不仅仅检查组件输入中的更改：如果组件发生事件，该事件也将触发变更检测。</p>
+<p>根据<a href=http://victorsavkin.com/post/110170125256/change-detection-in-angular-2 target=_blank rel="noopener noreffer">引用</a>自 Victor Savkin 的博客：</p>
+<blockquote>
+<p>当使用 OnPush 检测器时，框架将在其任何输入属性发生更改时，当它触发事件或当 Observable 触发事件时检查 OnPush 组件。</p>
+</blockquote>
+<p>尽管可以提供更好的性能，但如果与可变对象一起使用，则使用 <code>OnPush</code> 的代价是很高的复杂性。它可能会引入难以推理和重现的错误。但是有一种方法可以使 <code>OnPush</code> 的使用成为可行的。</p>
+<h3 id=使用-immutablejs-简化-angular-应用程序的构建>使用 Immutable.js 简化 Angular 应用程序的构建</h3>
+<p>如果我们仅使用不可变对象和不可变列表构建应用程序，则可以在所有地方使用 <code>OnPush</code>，而不会陷入变更检测错误的风险。这是因为对于不可变对象，修改数据的唯一方法是创建一个新的不可变对象并替换先前的对象。对于不可变的对象，我们可以保证：</p>
+<ul>
+<li>一个新的不可变对象将始终触发 <code>OnPush</code> 变更检测</li>
+<li>我们不能忘记创建对象的新副本而意外地产生错误，因为修改数据的唯一方法是创建新对象</li>
+</ul>
+<p>对于不可变的一个不错的选择是使用 <a href=https://facebook.github.io/immutable-js/ target=_blank rel="noopener noreffer">Immutable.js</a> 库。该库提供了用于构建应用程序的不可变基元，例如不可变对象（Map）和不可变列表。</p>
+<p>该库也可以以类型安全的方式使用，阅读<a href=https://blog.angular-university.io/angular-2-application-architecture-building-flux-like-apps-using-redux-and-immutable-js-js/ target=_blank rel="noopener noreffer">之前的文章</a>，以获取有关如何执行此操作的示例。</p>
+<h2 id=避免变更检测循环生产与开发模式>避免变更检测循环：生产与开发模式</h2>
+<p>Angular 变更检测的重要属性之一是，它与 AngularJs 不同，它强制执行单向数据流：当更新控制器类上的数据时，变更检测将运行并更新视图。</p>
+<p>但是视图的更新本身并不会触发进一步的更改，而这些更改又会触发视图的进一步更新，从而在 AngularJs 中创建了 digest cycle。</p>
+<h3 id=如何在angular中触发变更检测循环>如何在Angular中触发变更检测循环？</h3>
+<p>一种方法是使用生命周期回调。例如，在 <a href=https://github.com/jhades/blog.angular-university.io/blob/master/ng2-change-detection/src/todo_list.ts#L46 target=_blank rel="noopener noreffer">TodoList</a> 组件中，我们可以触发回调到另一个组件改变其中一个绑定：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=nx>ngAfterViewChecked</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>callback</span> <span class=o>&amp;&amp;</span> <span class=k>this</span><span class=p>.</span><span class=nx>clicked</span><span class=p>)</span> <span class=p>{</span>
+        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s2>&#34;changing status ...&#34;</span><span class=p>);</span>
+        <span class=k>this</span><span class=p>.</span><span class=nx>callback</span><span class=p>(</span><span class=nb>Math</span><span class=p>.</span><span class=nx>random</span><span class=p>());</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>错误消息将显示在控制台中：</p>
+<pre tabindex=0><code>EXCEPTION: Expression '{{message}} in App@3:20' has changed after it was checked
+</code></pre><p>仅当我们在开发模式下运行 Angular 时，才会引发此错误消息。如果启用生产模式会怎样？</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=err>@</span><span class=nx>NgModule</span><span class=p>({</span>
+    <span class=nx>declarations</span><span class=o>:</span> <span class=p>[</span><span class=nx>App</span><span class=p>],</span>
+    <span class=nx>imports</span><span class=o>:</span> <span class=p>[</span><span class=nx>BrowserModule</span><span class=p>],</span>
+    <span class=nx>bootstrap</span><span class=o>:</span> <span class=p>[</span><span class=nx>App</span><span class=p>]</span>
+<span class=p>})</span>
+<span class=kr>export</span> <span class=kr>class</span> <span class=nx>AppModule</span> <span class=p>{}</span>
+</code></pre></div><p>在生产模式下，不会引发该错误，并且不会发现问题。</p>
+<h3 id=变更检测问题经常发生吗>变更检测问题经常发生吗？</h3>
+<p>我们的确必须竭尽全力触发变更检测循环，但以防万一最好在开发阶段始终使用开发模式，因为这样可以避免问题。</p>
+<p>这种保证是以 Angular 始终运行变更检测两次为代价的，这是第二次检测此类情况。在生产模式下，变更检测仅运行一次。</p>
+<h2 id=打开--关闭变更检测并手动触发>打开 / 关闭变更检测并手动触发</h2>
+<p>在某些特殊情况下，我们确实希望关闭变更检测。想象一下一种情况，其中大量数据通过 Websocket 从后端到达。我们可能只想每 5 秒更新一次 UI 的特定部分。为此，我们首先将变更检测器注入到组件中：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=nx>constructor</span><span class=p>(</span><span class=kr>private</span> <span class=nx>ref</span><span class=o>:</span> <span class=nx>ChangeDetectorRef</span><span class=p>)</span> <span class=p>{</span>
+    <span class=nx>ref</span><span class=p>.</span><span class=nx>detach</span><span class=p>();</span>
+    <span class=nx>setInterval</span><span class=p>(()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+      <span class=k>this</span><span class=p>.</span><span class=nx>ref</span><span class=p>.</span><span class=nx>detectChanges</span><span class=p>();</span>
+    <span class=p>},</span> <span class=mi>5000</span><span class=p>);</span>
+  <span class=p>}</span>
+</code></pre></div><p>如我们所见，我们只是拆下了变更检测器，这有效地关闭了变更检测。然后，我们只需调用 <code>detectChanges()</code> 每 5 秒手动触发一次。</p>
+<p>现在，让我们快速总结一下有关 Angular 变更检测所需的所有知识：它是什么，它如何工作以及变更检测主要的可用类型是什么。</p>
+<h2 id=总结>总结</h2>
+<p>Angular 变更检测是内置的框架功能，可确保组件数据与其 HTML 模板视图之间的自动同步。</p>
+<p>变更检测通过检测常见的浏览器事件（例如鼠标单击，HTTP 请求和其他类型的事件），并确定是否需要更新每个组件的视图来起作用。</p>
+<p>变更检测有两种类型：</p>
+<ul>
+<li>默认变更检测：Angular 通过比较事件发生之前和之后的所有模板表达式值（对于组件树的所有组件）来决定是否需要更新视图。</li>
+<li>OnPush 变更检测：这是通过检测一些新数据是否已通过组件输入或使用异步管道订阅的 Observable 显式推送到组件中而起作用的。（还有触发事件）</li>
+</ul>
+<p>Angular的<strong>默认</strong>变更检测机制实际上与 AngularJs 相似：它比较浏览器事件前后的模板表达式的值，以查看是否有所更改。<strong>所有</strong>组件都这样做。但是也有一些重要的区别：</p>
+<p>其一，没有变更检测循环，也没有像 AngularJs 中的 digest cycle。这允许仅通过查看其模板和其控制器就可以推断出每个组件。</p>
+<p>另一个区别是，由于构建了变更检测器，因此组件中检测变更的机制要快得多。</p>
+<p>最后，与 AngularJs 不同，变更检测机制是可以自定义的。</p>
+<section class=footnotes role=doc-endnotes>
+<hr>
+<ol>
+<li id=fn:1 role=doc-endnote>
+<p>JavaScript VM，JavaScript 虚拟机，即 JavaScript 引擎。&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2021-03-23</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/ data-title="Angular 变更检测——它到底是如何工作的？"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/ data-title="Angular 变更检测——它到底是如何工作的？"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/ data-title="Angular 变更检测——它到底是如何工作的？"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/ data-title="Angular 变更检测——它到底是如何工作的？"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/states-and-fates/ class=prev rel=prev title="JS Promise States and Fates"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>JS Promise States and Fates</a>
+<a href=/posts/angular-%E4%B8%AD%E7%9A%84-di/ class=next rel=next title="Angular 中的 DI">Angular 中的 DI<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

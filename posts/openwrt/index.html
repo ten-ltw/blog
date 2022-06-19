@@ -1,0 +1,215 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>OpenWrt 初识记录 - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="OpenWrt 初识记录">
+<meta property="og:description" content="OpenWrt 初识记录 ESXI 不要修改 dispaly name，防止重启找不到 vmdk 管理口注意需要在 ESXI 中设置混淆 安装 创建 3.x Linux 64位 虚拟机 给预留内存以便于硬件直通 对应的网口硬件号">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/openwrt/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-10-14T22:12:37+08:00">
+<meta property="article:modified_time" content="2021-10-14T22:12:37+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="OpenWrt 初识记录">
+<meta name=twitter:description content="OpenWrt 初识记录 ESXI 不要修改 dispaly name，防止重启找不到 vmdk 管理口注意需要在 ESXI 中设置混淆 安装 创建 3.x Linux 64位 虚拟机 给预留内存以便于硬件直通 对应的网口硬件号">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/openwrt/><link rel=prev href=https://blog.okten.cn/posts/%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E4%BA%8B%E5%8F%AA%E6%9C%89%E4%B8%80%E4%BB%B6/><link rel=next href=https://blog.okten.cn/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%9C%AC-docker-%E4%B9%A6/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"OpenWrt 初识记录","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/openwrt\/"},"genre":"posts","wordcount":568,"url":"https:\/\/blog.okten.cn\/posts\/openwrt\/","datePublished":"2021-10-14T22:12:37+08:00","dateModified":"2021-10-14T22:12:37+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OpenWrt 初识记录</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/all-in-one-server/><i class="far fa-folder fa-fw" aria-hidden=true></i>All In One Server</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2021-10-14>2021-10-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;568 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;2 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#安装>安装</a></li>
+<li><a href=#配置>配置</a>
+<ul>
+<li><a href=#network>network</a></li>
+<li><a href=#dhcp>DHCP</a></li>
+<li><a href=#动态-dns>动态 DNS</a></li>
+<li><a href=#shadowsocksr-plus>ShadowSocksR Plus+</a></li>
+<li><a href=#端口映射>端口映射</a></li>
+<li><a href=#https>HTTPS</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=openwrt-初识记录>OpenWrt 初识记录</h1>
+<p>ESXI 不要修改 dispaly name，防止重启找不到 vmdk</p>
+<p>管理口注意需要在 ESXI 中设置混淆</p>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=../media/16342135727671/16343547085004.jpg data-srcset="../media/16342135727671/16343547085004.jpg, ../media/16342135727671/16343547085004.jpg 1.5x, ../media/16342135727671/16343547085004.jpg 2x" data-sizes=auto alt=../media/16342135727671/16343547085004.jpg title=../media/16342135727671/16343547085004.jpg></p>
+<h2 id=安装>安装</h2>
+<ol>
+<li>创建 3.x Linux 64位 虚拟机</li>
+<li>给预留内存以便于硬件直通</li>
+</ol>
+<blockquote>
+<p>对应的网口硬件号是 2 3 4 5
+网口直通：</p>
+<ul>
+<li>eth0：Control</li>
+<li>eth1：NAS</li>
+<li>eth2：LAN</li>
+<li>eth3：WAN</li>
+</ul>
+</blockquote>
+<ol start=3>
+<li>创建目录上传 vmdk，使用 self 精简版镜像。</li>
+<li>选择 BIOS 引导镜像，防止 UEFI 未来需要修改硬盘大小。</li>
+</ol>
+<p>启动设置密码。
+<div class="details admonition tip open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-lightbulb fa-fw" aria-hidden=true></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden=true></i>
+</div>
+<div class=details-content>
+<div class=admonition-content>设置 ESXI 启动项添加 OpenWrt。</div>
+</div>
+</div></p>
+<h2 id=配置>配置</h2>
+<p>文档配置会更快更方便，大部分都在 <code>etc/config</code>。</p>
+<h3 id=network>network</h3>
+<p>设置网口和固定 IP
+network 路径：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>vi /etc/config/network
+</code></pre></div><p>设置 LAN 口固定 IP 后可以使用 <code>ifdown lanName</code> 和 <code>ifup lanName</code> 重启接口。</p>
+<h3 id=dhcp>DHCP</h3>
+<p>dhcp 文件路径：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>vi /etc/config/dhcp
+</code></pre></div><p>配置格式：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=l>config host</span><span class=w>
+</span><span class=w>	</span><span class=l>option name &#39;HostName&#39;</span><span class=w>
+</span><span class=w>	</span><span class=l>option dns &#39;1&#39;</span><span class=w>
+</span><span class=w>	</span><span class=l>option mac &#39;12:d3:3a:43:bc:54&#39;</span><span class=w>
+</span><span class=w>	</span><span class=l>option ip &#39;192.168.50.12&#39;</span><span class=w>
+</span><span class=w>	</span><span class=l>option leasetime &#39;infinite&#39;</span><span class=w>
+</span></code></pre></div><div class="details admonition tip open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-lightbulb fa-fw" aria-hidden=true></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden=true></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><strong>host name</strong> 不可以有空格，否则导致 dhcp server 无法启动。</div>
+</div>
+</div>
+<div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw" aria-hidden=true></i>提示<i class="details-icon fas fa-angle-right fa-fw" aria-hidden=true></i>
+</div>
+<div class=details-content>
+<div class=admonition-content>本地无线设备在重启软路由 dhcp 依然无变化，尝试重启 wifi 转发路由器，wifi 设备的 ip 因为保持与路由连接，没有更新。</div>
+</div>
+</div>
+<h3 id=动态-dns>动态 DNS</h3>
+<p>ddns 文件路径：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>vi /etc/config/ddns
+</code></pre></div><p>创建 <a href=https://console.dnspod.cn/account/token/token target=_blank rel="noopener noreffer">token</a></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=l>config service &#39;DNSPod&#39;</span><span class=w>
+</span><span class=w>        </span><span class=l>option service_name &#39;dnspod.cn&#39;</span><span class=w>
+</span><span class=w>        </span><span class=l>option enabled &#39;1&#39;</span><span class=w>
+</span><span class=w>        </span><span class=l>option lookup_host &#39;domain name&#39;</span><span class=w>
+</span><span class=w>        </span><span class=l>option domain &#39;domain name&#39;</span><span class=w>
+</span><span class=w>        </span><span class=l>option username &#39;ID&#39;</span><span class=w>
+</span><span class=w>        </span><span class=l>option password &#39;Token&#39;</span><span class=w>
+</span></code></pre></div><p>不同服务商的 ddns 配置不一样，可以 luci UI 配置。</p>
+<h3 id=shadowsocksr-plus>ShadowSocksR Plus+</h3>
+<p>服务器节点</p>
+<p>订阅 URL 添加</p>
+<p>更新所有订阅服务节点</p>
+<p>应用节点</p>
+<p>保存</p>
+<p>为保证 ddns 好用，记得清理缓存。</p>
+<h3 id=端口映射>端口映射</h3>
+<p>配置在防火墙里：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>vi /etc/config/ddns
+</code></pre></div><p>配置如下：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=l>config redirect                                    </span><span class=w>
+</span><span class=w>        </span><span class=l>option target &#39;DNAT&#39;                    </span><span class=w>
+</span><span class=w>        </span><span class=l>option src &#39;wan&#39;                           </span><span class=w>
+</span><span class=w>        </span><span class=l>option dest &#39;lan&#39;                                  </span><span class=w>
+</span><span class=w>        </span><span class=l>option proto &#39;tcp udp&#39;                  </span><span class=w>
+</span><span class=w>        </span><span class=l>option src_dport &#39;80&#39;                 </span><span class=w>
+</span><span class=w>        </span><span class=l>option dest_ip &#39;192.168.50.1&#39;           </span><span class=w>
+</span><span class=w>        </span><span class=l>option dest_port &#39;80&#39;                   </span><span class=w>
+</span><span class=w>        </span><span class=l>option name &#39;Router&#39;</span><span class=w>
+</span></code></pre></div><h3 id=https>HTTPS</h3>
+<p>luci UI 配置</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>opkg update <span class=p>&amp;&amp;</span> opkg install openssl-util luci-app-uhttpd
+</code></pre></div><p>或者也是在 config 里面</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>vi /etc/config/uhttpd
+</code></pre></div><p>添加 https 监听和证书地址，证书使用 nigix 的。
+注意重启 uhttpd</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd>/etc/init.d/uhttpd restart
+</code></pre></div></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2021-10-14</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/openwrt/ data-title="OpenWrt 初识记录"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/openwrt/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/openwrt/ data-title="OpenWrt 初识记录"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/openwrt/ data-title="OpenWrt 初识记录"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/openwrt/ data-title="OpenWrt 初识记录"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E4%BA%8B%E5%8F%AA%E6%9C%89%E4%B8%80%E4%BB%B6/ class=prev rel=prev title=最重要的事，只有一件><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>最重要的事，只有一件</a>
+<a href=/posts/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%9C%AC-docker-%E4%B9%A6/ class=next rel=next title="我的第一本 Docker 书">我的第一本 Docker 书<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

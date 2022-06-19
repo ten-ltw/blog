@@ -1,0 +1,252 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>Angular 中的 DI - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="Angular 中的 DI">
+<meta property="og:description" content="Angular 中的 DI 我们都知道创建一个服务，并通过 @Injectable 装饰器或者在 Module 中的 providers 中注册，并在组件的构造方法中通过如下方式依赖注入： import { AuthService } from '../user/auth.service'; export class NavBarComponent { constructor(public auth:AuthService){ } } 首">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-03-25T18:28:34+08:00">
+<meta property="article:modified_time" content="2021-03-25T18:28:34+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="Angular 中的 DI">
+<meta name=twitter:description content="Angular 中的 DI 我们都知道创建一个服务，并通过 @Injectable 装饰器或者在 Module 中的 providers 中注册，并在组件的构造方法中通过如下方式依赖注入： import { AuthService } from '../user/auth.service'; export class NavBarComponent { constructor(public auth:AuthService){ } } 首">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/><link rel=prev href=https://blog.okten.cn/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/><link rel=next href=https://blog.okten.cn/posts/ng-fundamentals-%E5%9F%BA%E7%A1%80%E5%86%85%E5%AE%B9%E6%9F%A5%E7%BC%BA%E8%A1%A5%E6%BC%8F/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Angular 中的 DI","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/angular-%E4%B8%AD%E7%9A%84-di\/"},"genre":"posts","wordcount":2177,"url":"https:\/\/blog.okten.cn\/posts\/angular-%E4%B8%AD%E7%9A%84-di\/","datePublished":"2021-03-25T18:28:34+08:00","dateModified":"2021-03-25T18:28:34+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog"><span class=header-title-pre><img src=images/logo.jpg></img></span>Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Angular 中的 DI</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2021-03-25>2021-03-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;2177 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;5 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#angular-如何知道我们要的是哪个-service-的实例呢>Angular 如何知道我们要的是哪个 service 的实例呢？</a>
+<ul>
+<li><a href=#angular-与-angular-js-的-di-的区别>Angular 与 Angular Js 的 DI 的区别</a></li>
+</ul>
+</li>
+<li><a href=#如何使用-injectiontoken>如何使用 InjectionToken</a>
+<ul>
+<li><a href=#如何在-angular-中使用-toastr>如何在 Angular 中使用 toastr</a></li>
+<li><a href=#添加-toastr-服务>添加 toastr 服务</a></li>
+<li><a href=#injectiontoken-注册服务>InjectionToken 注册服务</a></li>
+<li><a href=#注入-injectiontoken-服务>注入 InjectionToken 服务</a></li>
+</ul>
+</li>
+<li><a href=#四种-provider>四种 Provider</a></li>
+<li><a href=#总结>总结</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><h1 id=angular-中的-di>Angular 中的 DI</h1>
+<p>我们都知道创建一个服务，并通过 <code>@Injectable</code> 装饰器或者在 Module 中的 providers 中注册，并在组件的构造方法中通过如下方式依赖注入：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>import</span> <span class=p>{</span> <span class=nx>AuthService</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;../user/auth.service&#39;</span><span class=p>;</span>
+<span class=kr>export</span> <span class=kr>class</span> <span class=nx>NavBarComponent</span> <span class=p>{</span>
+    <span class=kr>constructor</span><span class=p>(</span><span class=kr>public</span> <span class=nx>auth</span>:<span class=kt>AuthService</span><span class=p>){</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>首先，必须先从其文件中导入 AuthService，并在构造函数中以参数的形式将其注入，参数的类型与文件内导出的 Class 一致，这个 Class 是 ES6 的语法糖，它实际上就是一个构造函数。</p>
+<p>但是我们在这里是想得到一个 AuthService 的实例，我们并是想要得到 AuthService Class 或者 AuthService 函数，这就是 Angular 所做的：创建了一个实例并给我们这个实例。当我们注册了 AuthService Class，Angular 会创建这个 Class 的实例，并在任何引用它的构造函数中给我们这个实例，而创建这个实例就发生在我们将 AuthService 注册在 Module 的 providers 中。</p>
+<p>那 Angular 是如何知道我们想要的是 AuthService 而不是其他 service 呢？</p>
+<h2 id=angular-如何知道我们要的是哪个-service-的实例呢>Angular 如何知道我们要的是哪个 service 的实例呢？</h2>
+<p>Angular 通过截获组件构造函数中的声明，通过 TypeScript 的类型声明（这里就是 AuthService），在服务中寻找。所以实际上，它是通过 Class 作为一个 key 来寻找正确的对象，在上面的例子中，AuthService 实例就是在 AuthService 的 DI 注册时被创建的。</p>
+<h3 id=angular-与-angular-js-的-di-的区别>Angular 与 Angular Js 的 DI 的区别</h3>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=nx>angular</span><span class=p>.</span><span class=nx>module</span><span class=p>(</span><span class=s1>&#39;app&#39;</span><span class=p>).</span><span class=nx>service</span><span class=p>(</span><span class=s1>&#39;auth&#39;</span><span class=p>,</span><span class=nx>AuthService</span><span class=p>)</span>
+</code></pre></div><p>在 Angular Js 中，服务是通过上面的方式注册的，service() 方法有两个参数，第一个参数是一个字符串，第二个参数是我们想要的对象。所以 Angular Js 的依赖注入是通过字符串来匹配的。</p>
+<p>当我们想要这个服务的实例时，我们需要创建一个同名的参数。而在我们编写代码时，常常因为单纯 miss 导致服务注入的失败，不得不在检查我们的代码。</p>
+<p>而 Angular 中，我们使用 Class 或者 Type 作为我们的 key 或者换个词 token。</p>
+<p>在 Angular 中，构造函数参数的类型 AuthService 起到两个作用：其一是用来给 TypeScript 识别变量类型，让我们在编写代码时 IDE 可以通过 . 来访问其中的成员。其二就是就是 Angular 通过这个 Type 声明在依赖注入注册中寻找匹配的对象。</p>
+<p>所以在 Angular 中，我们创建一个 service 就直接创建一个 Class。</p>
+<h2 id=如何使用-injectiontoken>如何使用 InjectionToken</h2>
+<p>我们通过使用一个消息通知库来学习如何使用 InjectionToken。</p>
+<h3 id=如何在-angular-中使用-toastr>如何在 Angular 中使用 toastr</h3>
+<p><a href=https://www.npmjs.com/package/toastr target=_blank rel="noopener noreffer">toastr</a> 是一个通知 Jquery 库，目前已经有支持 Angular 版本的 <a href=https://www.npmjs.com/package/ngx-toastr target=_blank rel="noopener noreffer">ngx-toastr</a> 提供使用，但是如果想使用原生的 toastr 我们该如何做呢。</p>
+<p>根据官方的方法安装 toastr 库到我们的工程中，那如何在 Angular 中使用呢？</p>
+<p>首先在 Angular 的 webpack 文件中导入 toastr 的 style 和 script：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=s2>&#34;styles&#34;</span><span class=err>:</span> <span class=p>[</span>
+    <span class=s2>&#34;node_modules/toastr/build/toastr.min.css&#34;</span><span class=p>,</span>
+    <span class=s2>&#34;src/styles.css&#34;</span>
+<span class=p>]</span><span class=err>,</span>
+<span class=s2>&#34;scripts&#34;</span><span class=err>:</span> <span class=p>[</span>
+    <span class=s2>&#34;node_modules/jquery/dist/jquery.min.js&#34;</span><span class=p>,</span>
+    <span class=s2>&#34;node_modules/toastr/build/toastr.min.js&#34;</span>
+<span class=p>]</span>
+</code></pre></div><p>此时编译后的 SPA 中已经有了我们需要的 toastr 对象，我们可以在页面的控制台中查看 window.toastr 对象：</p>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=media/16166681233612/16166682192597.jpg data-srcset="media/16166681233612/16166682192597.jpg, media/16166681233612/16166682192597.jpg 1.5x, media/16166681233612/16166682192597.jpg 2x" data-sizes=auto alt=media/16166681233612/16166682192597.jpg title=media/16166681233612/16166682192597.jpg></p>
+<p>但是这时候在使用 toastr 对象时，IDE 会报错：</p>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=media/16166681233612/16166682041574.jpg data-srcset="media/16166681233612/16166682041574.jpg, media/16166681233612/16166682041574.jpg 1.5x, media/16166681233612/16166682041574.jpg 2x" data-sizes=auto alt=media/16166681233612/16166682041574.jpg title=media/16166681233612/16166682041574.jpg></p>
+<p>原因很简单，是因为 TypeScript 并不知道我们的 toastr 对象，这时候需要声明一下这个对象：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>declare</span> <span class=kd>let</span> <span class=nx>toastr</span>: <span class=kt>any</span><span class=p>;</span>
+</code></pre></div><p>这时候就可以顺利使用 toastr 库中的成员方法来弹出我们的消息提示框了。</p>
+<h3 id=添加-toastr-服务>添加 toastr 服务</h3>
+<p>在一个工程中，我们肯定会不止一次的进行 HTTP 请求或者其他一些需要弹出消息提示框的情况，但每次都需要声明一个 toastr 对象有点太麻烦了，我们可以创建下面这个类注册为我们的服务：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>import</span> <span class=p>{</span> <span class=nx>Injectable</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;@angular/core&#39;</span><span class=p>;</span>
+
+<span class=kr>declare</span> <span class=kd>let</span> <span class=nx>toastr</span>: <span class=kt>any</span><span class=p>;</span>
+
+<span class=kd>@Injectable</span><span class=p>()</span>
+<span class=kr>export</span> <span class=kr>class</span> <span class=nx>ToastrService</span> <span class=p>{</span>
+    <span class=nx>success</span><span class=p>(</span><span class=nx>message</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+        <span class=nx>toastr</span><span class=p>.</span><span class=nx>success</span><span class=p>(</span><span class=nx>message</span><span class=p>,</span> <span class=nx>title</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=nx>info</span><span class=p>(</span><span class=nx>message</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+        <span class=nx>toastr</span><span class=p>.</span><span class=nx>info</span><span class=p>(</span><span class=nx>message</span><span class=p>,</span> <span class=nx>title</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=nx>warning</span><span class=p>(</span><span class=nx>message</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+        <span class=nx>toastr</span><span class=p>.</span><span class=nx>warning</span><span class=p>(</span><span class=nx>message</span><span class=p>,</span> <span class=nx>title</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=nx>error</span><span class=p>(</span><span class=nx>message</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+        <span class=nx>toastr</span><span class=p>.</span><span class=nx>error</span><span class=p>(</span><span class=nx>message</span><span class=p>,</span> <span class=nx>title</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>这样我们也能过滤掉 toastr 中其他不必要的成员方法，方便项目中的同事使用。</p>
+<h3 id=injectiontoken-注册服务>InjectionToken 注册服务</h3>
+<p>回顾一下上文中 Angular 的服务：</p>
+<blockquote>
+<p>我们创建一个 service 就直接创建一个 Class</p>
+</blockquote>
+<p>我们并没有创建一个可导出 toastr Class，并没有去用它作为 key 在我们的 Module 中注册它，我们不能在 Module 中导入 toastr，并将其添加到 providers 数组中。</p>
+<p>因此我们如下修改我们的 toastr.service.ts：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>import</span> <span class=p>{</span> <span class=nx>InjectionToken</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@angular/core&#34;</span><span class=p>;</span>
+
+<span class=kr>export</span> <span class=kd>let</span> <span class=nx>TOASTR_TOKEN</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>InjectionToken</span><span class=p>&lt;</span><span class=nt>Toastr</span><span class=p>&gt;(</span><span class=s1>&#39;toastr&#39;</span><span class=p>);</span>
+
+<span class=kr>export</span> <span class=kr>interface</span> <span class=nx>Toastr</span> <span class=p>{</span>
+    <span class=nx>success</span><span class=p>(</span><span class=nx>msg</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=k>void</span><span class=p>;</span>
+    <span class=nx>info</span><span class=p>(</span><span class=nx>msg</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=k>void</span><span class=p>;</span>
+    <span class=nx>warning</span><span class=p>(</span><span class=nx>msg</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=k>void</span><span class=p>;</span>
+    <span class=nx>error</span><span class=p>(</span><span class=nx>msg</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>title?</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=k>void</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p>使用 InjectionToken 构造函数 new 一个 TOASTR_TOKEN 对象，并指定其接口构造。这样就创建了我们的 InjectionToken。</p>
+<p>然后在我们的 Module 中注册 toastr 服务：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>import</span> <span class=p>{</span> <span class=nx>IToastr</span><span class=p>,</span> <span class=nx>TOASTR_TOKEN</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;./common/toastr.service&#39;</span><span class=p>;</span>
+
+<span class=kr>declare</span> <span class=kd>let</span> <span class=nx>toastr</span>: <span class=kt>IToastr</span><span class=p>;</span>
+
+<span class=kd>@NgModule</span><span class=p>({</span>
+  <span class=p>...</span>
+  <span class=nx>providers</span><span class=o>:</span> <span class=p>[</span>
+    <span class=p>{</span> <span class=nx>provide</span>: <span class=kt>TOASTR_TOKEN</span><span class=p>,</span> <span class=nx>useValue</span>: <span class=kt>toastr</span> <span class=p>}</span>
+  <span class=p>]</span>
+  <span class=p>...</span>
+<span class=p>})</span>
+</code></pre></div><p>首先导入我们的 IToastr 接口和 TOASTR_TOKEN InjectionToken，声明 toastr 对象，在 providers 数组中注册，这里注册时没有像之前的 AuthService 服务，只使用了类型。AuthService 的注册其实只是 <code>{ provide: AuthService , useClass: AuthService }</code> 的简写（关于 useClass 和 userValue 后面再详细对比）。provide 的值就是 token，而 useValue 的值就是 Angular 为我们创建的实例。</p>
+<h3 id=注入-injectiontoken-服务>注入 InjectionToken 服务</h3>
+<p>接下来我们看看 InjectionToken 注册的服务如何使用。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>import</span> <span class=p>{</span> <span class=nx>Component</span><span class=p>,</span> <span class=nx>OnInit</span><span class=p>,</span> <span class=nx>Inject</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;@angular/core&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=p>{</span> <span class=nx>IToastr</span><span class=p>,</span> <span class=nx>TOASTR_TOKEN</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;../common/toastr.service&#39;</span><span class=p>;</span>
+<span class=kr>constructor</span><span class=p>(</span>
+  <span class=kr>private</span> <span class=nx>auth</span>: <span class=kt>AuthService</span><span class=p>,</span>
+  <span class=kr>private</span> <span class=nx>router</span>: <span class=kt>Router</span><span class=p>,</span>
+  <span class=kd>@Inject</span><span class=p>(</span><span class=nx>TOASTR_TOKEN</span><span class=p>)</span> <span class=kr>private</span> <span class=nx>toastr</span>: <span class=kt>IToastr</span><span class=p>)</span> <span class=p>{</span>
+<span class=p>}</span>
+</code></pre></div><p>除了导入我们的接口 IToastr 和 TOASTR_TOKEN Token 之外，还需要从 <code>@angular/core</code> 中导入 Inject。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=cm>/**
+</span><span class=cm> * Type of the Inject metadata.
+</span><span class=cm> *
+</span><span class=cm> * @publicApi
+</span><span class=cm> */</span>
+<span class=kr>export</span> <span class=kr>declare</span> <span class=kr>interface</span> <span class=nx>Inject</span> <span class=p>{</span>
+    <span class=cm>/**
+</span><span class=cm>     * A [DI token](guide/glossary#di-token) that maps to the dependency to be injected.
+</span><span class=cm>     */</span>
+    <span class=nx>token</span>: <span class=kt>any</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p>我们可以看到 Inject 的参数是 token，当我们注入参数 toastr 时，IToastr 并不是我们依赖注入的 Token，而只是用来智能感知。真正指定了 Token 的是装饰器 @Inject()。</p>
+<p>这样我就可以在我们的类中拿到 toastr 实例，像普通的 service 一样使用它：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript>  <span class=nx>saveProfile</span><span class=p>(</span><span class=nx>profileFormValue</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>profileForm</span><span class=p>.</span><span class=nx>valid</span><span class=p>)</span> <span class=p>{</span>
+      <span class=k>this</span><span class=p>.</span><span class=nx>auth</span><span class=p>.</span><span class=nx>updateUser</span><span class=p>(</span><span class=nx>profileFormValue</span><span class=p>.</span><span class=nx>firstName</span><span class=p>,</span> <span class=nx>profileFormValue</span><span class=p>.</span><span class=nx>lastName</span><span class=p>);</span>
+      <span class=k>this</span><span class=p>.</span><span class=nx>toastr</span><span class=p>.</span><span class=nx>success</span><span class=p>(</span><span class=s1>&#39;Profile Saved&#39;</span><span class=p>);</span>
+      <span class=k>this</span><span class=p>.</span><span class=nx>router</span><span class=p>.</span><span class=nx>navigate</span><span class=p>([</span><span class=s1>&#39;/events&#39;</span><span class=p>]);</span>
+    <span class=p>}</span>
+  <span class=p>}</span>
+</code></pre></div><h2 id=四种-provider>四种 Provider</h2>
+<p>上面我们已经见过两种 provider，useValue 和 useClass。</p>
+<p>在 Angular 的 DI 中一共有四种 provider：</p>
+<ul>
+<li><a href=https://angular.io/api/core/ValueProvider target=_blank rel="noopener noreffer">ValueProvider</a></li>
+<li><a href=https://angular.io/api/core/ClassProvider target=_blank rel="noopener noreffer">ClassProvider</a></li>
+<li><a href=https://angular.io/api/core/ExistingProvider target=_blank rel="noopener noreffer">ExistingProvider</a></li>
+<li><a href=https://angular.io/api/core/FactoryProvider target=_blank rel="noopener noreffer">FactoryProvider</a></li>
+</ul>
+<p>它们分别使用四种方式为 Token 提供一个实例。</p>
+<h2 id=总结>总结</h2>
+<p>Angular 是在注册时产生的实例，这样产生的实例将在注册所在作用域内存在。</p>
+<p>Angular 依赖注入时是通过 Token 来查找实例。</p>
+<p>常用的服务注入实际上是使用 ClassProvider 提供的实例，而其 Token 就是它的 Class，在依赖注入时，Angular 截获其 Class 并以它为 Token 寻找实例。</p>
+<p>相信我们都明了依赖注入的设计模式，也明确它的优势。可是在我们之前从 AngularJs 开始到 Angular 板砖的路程中没有过仔细学习 Angular 依赖注入的本质。这让我们在开发中只会复制粘贴代码，导致报错时让我们无从下手时，只能通过查阅文档的案例，来对比自己的代码中具体有哪些错误。但是当知道原理后，我们不但能清晰的写出依赖注入的代码，还可以灵活选用不同的 Provider，写出更漂亮的代码。</p>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2021-03-25</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/ data-title="Angular 中的 DI"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/ data-title="Angular 中的 DI"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/ data-title="Angular 中的 DI"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/angular-%E4%B8%AD%E7%9A%84-di/ data-title="Angular 中的 DI"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/angular-%E5%8F%98%E6%9B%B4%E6%A3%80%E6%B5%8B%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/ class=prev rel=prev title="Angular 变更检测——它到底是如何工作的？"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Angular 变更检测——它到底是如何工作的？</a>
+<a href=/posts/ng-fundamentals-%E5%9F%BA%E7%A1%80%E5%86%85%E5%AE%B9%E6%9F%A5%E7%BC%BA%E8%A1%A5%E6%BC%8F/ class=next rel=next title="ng-fundamentals 基础内容查缺补漏">ng-fundamentals 基础内容查缺补漏<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.2">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a>
+</div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>
