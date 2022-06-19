@@ -28,7 +28,7 @@ hasCJKLanguage = true
     pre = ""
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
-    name = "文章"
+    name = "所有文章"
     url = "/posts/"
     # 当你将鼠标悬停在此菜单链接上时, 将显示的标题
     title = ""
@@ -65,7 +65,7 @@ hasCJKLanguage = true
       # LOGO 的 URL
       logo = ""
       name = "Ten's Blog"
-      pre = "<img src=\"images/logo.jpg\"></img>"
+      pre = "<img src=\"/assets/logo.png\"></img>"
       post = ""
 
   # Footer config
@@ -129,15 +129,13 @@ hasCJKLanguage = true
   # Search config
   # 搜索配置
   [params.search]
-    enable = false
+    enable = true
     # type of search engine ["lunr", "algolia"]
     # 搜索引擎的类型 ["lunr", "algolia"]
     type = "lunr"
     # max index length of the chunked content
     # 文章内容最长索引长度
     contentLength = 4000
-    # placeholder of the search bar
-    # 搜索框的占位提示语
     placeholder = ""
     # max number of results length
     # 最大结果数目
@@ -197,10 +195,10 @@ hasCJKLanguage = true
   # Social config in home page
   # 主页的社交信息设置
   [params.social]
-    GitHub = ""
+    GitHub = "https://github.com/ten-ltw"
     Linkedin = ""
     Twitter = ""
-    Instagram = ""
+    Instagram = "ten_is_studing"
     Facebook = ""
     Telegram = ""
     Medium = ""
@@ -240,7 +238,7 @@ hasCJKLanguage = true
     Strava = ""
     Skype = ""
     Whatsapp = ""
-    Zhihu = ""
+    Zhihu = "dan-ke-58-70"
     Douban = ""
     Angellist = ""
     Slidershare = ""
@@ -265,7 +263,7 @@ hasCJKLanguage = true
     ORCID = ""
     Pleroma = ""
     Kaggle = ""
-    Email = ""
+    Email = "li.tw.ten@gmail.com"
     Phone = ""
     RSS = ""
 
@@ -610,3 +608,5 @@ hasCJKLanguage = true
     # whether to use object-fit-images to be compatible with older browsers
     # 是否使用 object-fit-images 来兼容旧式浏览器
     objectFit = false
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
