@@ -4,20 +4,20 @@
 <meta name=viewport content="width=device-width,initial-scale=1">
 <meta name=robots content="noodp">
 <title>通过变量作用域深入了解 undefined - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="通过变量作用域深入了解 undefined">
-<meta property="og:description" content="通过变量作用域深入了解 undefined undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却">
+<meta property="og:description" content="undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却并没有改变。 undefined = 0 // 0 undefined">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2020-12-24T21:57:44+08:00">
 <meta property="article:modified_time" content="2020-12-24T21:57:44+08:00"><meta property="og:site_name" content="My cool site">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="通过变量作用域深入了解 undefined">
-<meta name=twitter:description content="通过变量作用域深入了解 undefined undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却">
+<meta name=twitter:description content="undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却并没有改变。 undefined = 0 // 0 undefined">
 <meta name=application-name content="Ten's Blog">
 <meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined/><link rel=prev href=https://blog.okten.cn/posts/javascript-%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/><link rel=next href=https://blog.okten.cn/posts/%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E5%92%8C%E8%B0%83%E7%94%A8%E6%8E%8C%E6%8F%A1%E5%87%BD%E6%95%B0%E7%9A%84-this-%E5%80%BC/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
 <noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
-<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"通过变量作用域深入了解 undefined","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined\/"},"genre":"posts","keywords":"JavaScript","wordcount":2030,"url":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined\/","datePublished":"2020-12-24T21:57:44+08:00","dateModified":"2020-12-24T21:57:44+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"通过变量作用域深入了解 undefined","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined\/"},"genre":"posts","keywords":"JavaScript","wordcount":2018,"url":"https:\/\/blog.okten.cn\/posts\/%E9%80%9A%E8%BF%87%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3-undefined\/","datePublished":"2020-12-24T21:57:44+08:00","dateModified":"2020-12-24T21:57:44+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script></head>
 <body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -25,8 +25,8 @@
 <a href=/ title="Ten's Blog">Ten's Blog</a>
 </div>
 <div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> 所有文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
-<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-thin fa-archive"></i> 所有文章 </a><a class=menu-item href=/tags/><i class="fas fa-thin fa-tag"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-thin fa-folder-open"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
 <a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search>
 <i class="fas fa-search fa-fw" aria-hidden=true></i>
 </a>
@@ -54,7 +54,7 @@
 </div>
 <div class=menu id=menu-mobile><div class=search-wrapper>
 <div class="search mobile" id=search-mobile>
-<input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
 <a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search>
 <i class="fas fa-search fa-fw" aria-hidden=true></i>
 </a>
@@ -68,7 +68,7 @@
 <a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
 Cancel
 </a>
-</div><a class=menu-item href=/posts/ title>所有文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+</div><a class=menu-item href=/posts/ title><i class="fas fa-thin fa-archive"></i>所有文章</a><a class=menu-item href=/tags/ title><i class="fas fa-thin fa-tag"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-thin fa-folder-open"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw" aria-hidden=true></i>
 </a></div>
 </div>
@@ -83,7 +83,7 @@ Cancel
 <div class=toc-content id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">通过变量作用域深入了解 undefined</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2020-12-24>2020-12-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;2030 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2020-12-24>2020-12-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;2018 words&nbsp;
 <i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;5 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static data-kept>
 <div class="details-summary toc-title">
@@ -100,8 +100,7 @@ Cancel
 <li><a href=#注>注</a></li>
 </ul>
 </nav></div>
-</div><div class=content id=content><h1 id=通过变量作用域深入了解-undefined>通过变量作用域深入了解 undefined</h1>
-<p>undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却并没有改变。</p>
+</div><div class=content id=content><p>undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却并没有改变。</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-JavaScript data-lang=JavaScript>    <span class=kc>undefined</span> <span class=o>=</span> <span class=mi>0</span>
     <span class=c1>// 0
 </span><span class=c1></span>    <span class=kc>undefined</span>
