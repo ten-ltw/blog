@@ -33,3 +33,11 @@ jobs:
           personal_token: ${{ secrets.BLOG_GITHUB_TOKEN }}
           publish_dir: ./public
           publish_branch: blog
+
+      - name: Algolia Docsearch Uploader
+        uses: guzhongren/algolia-docsearch-upload-action@v1.0.0
+        env:
+          FILE_PATH: "./public/index.json"
+          APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
+          ADMIN_API_KEY: ${{secrets.ALGOLIA_API_KEY}}
+          INDEX_NAME: "my_blog"
