@@ -3,9 +3,8 @@ title: "OpenWrt 添加 SSL 证书后 NetData 和 TTYD 拒绝请求"
 date: 2022-04-10T21:06:37+08:00
 categories: ["All In One Server"]
 tags: ["OpenWrt"]
+hiddenFromHomePage: false
 ---
-
-# OpenWrt 添加 SSL 证书后 NetData 和 TTYD 拒绝请求
 
 原因是 iframe 中 hardcode 访问 http 协议。
 直接通过 nginx 服务器反向代理添加于 OpenWrt 相同 SSL 证书解决。

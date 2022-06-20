@@ -3,9 +3,9 @@ title: "ESXI 相关配置"
 date: 2021-09-05T07:39:37+08:00
 categories: ["All In One Server"]
 tags: ["ESXI"]
+hiddenFromHomePage: true
 ---
 
-# ESXI 相关配置
 记录一些 ESXI 使用中遇到的问题。
 ## 虚拟交换机
 ![](../media/16307987538087/16482642367494.jpg)

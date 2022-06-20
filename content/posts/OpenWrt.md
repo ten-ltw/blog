@@ -3,9 +3,8 @@ title: "OpenWrt 初识记录"
 date: 2021-10-14T22:12:37+08:00
 categories: ["All In One Server"]
 tags: ["OpenWrt"]
+hiddenFromHomePage: true
 ---
-
-# OpenWrt 初识记录
 
 ESXI 不要修改 dispaly name，防止重启找不到 vmdk
 

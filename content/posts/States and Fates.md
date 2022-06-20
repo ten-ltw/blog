@@ -3,9 +3,8 @@ title: "JS Promise States and Fates"
 date: 2021-02-10T20:57:40+08:00
 categories: ["Frontend"]
 tags: ["JavaScript"]
+hiddenFromHomePage: true
 ---
-
-# States and Fates
 
 This document helps clarify the different adjectives surrounding promises, by dividing them up into two categories: **states** and **fates**.
 

@@ -3,9 +3,9 @@ title: "Ubuntu server"
 date: 2021-10-30T16:40:37+08:00
 categories: ["All In One Server"]
 tags: ["Ubuntu"]
+hiddenFromHomePage: true
 ---
 
-# Ubuntu server
 用于一些自己写的智能家居服务和开源项目。
 
 ## Ubuntu 安装

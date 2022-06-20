@@ -3,9 +3,9 @@ title: "JavaScript 原型和原型链"
 date: 2020-12-15T19:37:33+08:00
 categories: ["Frontend"]
 tags: ["JavaScript"]
+hiddenFromHomePage: true
 ---
 
-# JavaScript 原型和原型链
 今天刚开始学习【重学前端】的课程，讲到装箱转换的时候提到了函数的 call 方法，而 call 方法在我的印象中就只有 call 约等于 apply ，然后就再没有然后了。在我想深入了解下 call 方法的时候又发现了有人在同时讲解原型，带着各种心情赶紧学习下到底什么是原型和原型链。
 
 ## 原型

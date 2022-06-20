@@ -25,7 +25,7 @@ hasCJKLanguage = true
     weight = 1
     identifier = "posts"
     # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
-    pre = ""
+    pre = "<i class='fas fa-thin fa-archive'></i>"
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
     name = "所有文章"
@@ -35,7 +35,7 @@ hasCJKLanguage = true
   [[menu.main]]
     weight = 2
     identifier = "tags"
-    pre = ""
+    pre = "<i class='fas fa-thin fa-tag'></i>"
     post = ""
     name = "标签"
     url = "/tags/"
@@ -43,7 +43,7 @@ hasCJKLanguage = true
   [[menu.main]]
     weight = 3
     identifier = "categories"
-    pre = ""
+    pre = "<i class='fas fa-thin fa-folder-open'></i>"
     post = ""
     name = "分类"
     url = "/categories/"
@@ -144,7 +144,7 @@ hasCJKLanguage = true
     # max index length of the chunked content
     # 文章内容最长索引长度
     contentLength = 4000
-    placeholder = ""
+    placeholder = "搜索文章标题或内容..."
     # max number of results length
     # 最大结果数目
     maxResultLength = 10
@@ -180,7 +180,7 @@ hasCJKLanguage = true
       avatarURL = "./logo.jpeg"
       # title shown in home page (HTML format is supported)
       # 主页显示的网站标题 (支持 HTML 格式)
-      title = ""
+      # title = "<div style='background-color: #b59595;top: 0;left: 0;height: 100%;width: 100%;z-index: -1;position: absolute;'></div>"
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
       subtitle = "晚飞了三十年的笨鸟想为这个世界做点事！"

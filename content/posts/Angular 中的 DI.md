@@ -3,9 +3,8 @@ title: "Angular 中的 DI"
 date: 2021-03-25T18:28:34+08:00
 categories: ["Frontend"]
 tags: ["Angular"]
+hiddenFromHomePage: true
 ---
-
-# Angular 中的 DI
 
 我们都知道创建一个服务，并通过 `@Injectable` 装饰器或者在 Module 中的 providers 中注册，并在组件的构造方法中通过如下方式依赖注入：
 

@@ -3,9 +3,9 @@ title: "我的第一本 Docker 书"
 date: 2021-10-30T12:12:31+08:00
 categories: ["Reading"]
 tags: ["读书笔记"]
+hiddenFromHomePage: true
 ---
 
-# 我的第一本 Docker 书
 可以作为工具书使用
 摘录一下目前我需要经常遇到的一些 cli
 ## docker 启动停止

@@ -3,9 +3,9 @@ title: "通过变量作用域深入了解 undefined"
 date: 2020-12-24T21:57:44+08:00
 categories: ["Frontend"]
 tags: ["JavaScript"]
+hiddenFromHomePage: true
 ---
 
-# 通过变量作用域深入了解 undefined
 undefined 是一个变量，它有可能被篡改，所以使用void（0）来代替他，但是在做实验的时候发现虽然给它赋值不报错，取值时候 undefined 却并没有改变。
 ```JavaScript
     undefined = 0

@@ -3,9 +3,8 @@ title: "Angular 变更检测——它到底是如何工作的？"
 date: 2021-03-23T19:41:26+08:00
 categories: ["Frontend"]
 tags: ["Angular"]
+hiddenFromHomePage: true
 ---
-
-# Angular 变更检测——它到底是如何工作的？
 
 原文：[Angular Change Detection - How Does It Really Work?](https://blog.angular-university.io/how-does-angular-2-change-detection-really-work/)
 
