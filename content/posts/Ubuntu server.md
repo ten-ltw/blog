@@ -2,6 +2,7 @@
 title: "Ubuntu server"
 date: 2021-10-30T16:40:37+08:00
 categories: ["All In One Server"]
+tags: ["Ubuntu"]
 ---
 
 # Ubuntu server

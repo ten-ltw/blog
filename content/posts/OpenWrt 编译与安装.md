@@ -2,6 +2,7 @@
 title: "OpenWrt 编译以及 ESXI 虚拟机宿主环境安装"
 date: 2022-04-14T22:31:37+08:00
 categories: ["All In One Server"]
+tags: ["OpenWrt"]
 ---
 
 # OpenWrt 编译以及 ESXI 虚拟机宿主环境安装

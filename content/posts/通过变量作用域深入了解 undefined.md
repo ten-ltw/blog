@@ -2,6 +2,7 @@
 title: "通过变量作用域深入了解 undefined"
 date: 2020-12-24T21:57:44+08:00
 categories: ["Frontend"]
+tags: ["JavaScript"]
 ---
 
 # 通过变量作用域深入了解 undefined

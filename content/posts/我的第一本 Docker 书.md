@@ -2,6 +2,7 @@
 title: "我的第一本 Docker 书"
 date: 2021-10-30T12:12:31+08:00
 categories: ["Reading"]
+tags: ["读书笔记"]
 ---
 
 # 我的第一本 Docker 书

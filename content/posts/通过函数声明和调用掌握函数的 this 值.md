@@ -2,6 +2,7 @@
 title: "通过函数声明和调用掌握函数的 this 值"
 date: 2021-01-16T10:15:20+08:00
 categories: ["Frontend"]
+tags: ["JavaScript"]
 ---
 
 # 通过函数声明和调用掌握函数的 this 值

@@ -2,6 +2,7 @@
 title: "解决 OpenMediaVault 安装卡住"
 date: 2022-03-26T14:07:37+08:00
 categories: ["All In One Server"]
+tags: ["OpenMediaVault"]
 ---
 
 # 解决 OpenMediaVault 安装卡住

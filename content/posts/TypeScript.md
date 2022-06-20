@@ -2,6 +2,7 @@
 title: "TypeScript 补漏"
 date: 2021-05-07T18:06:39+08:00
 categories: ["Frontend"]
+tags: ["TypeScript"]
 ---
 
 # TypeScript 补漏

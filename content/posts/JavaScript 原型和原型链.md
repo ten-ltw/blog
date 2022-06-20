@@ -2,6 +2,7 @@
 title: "JavaScript 原型和原型链"
 date: 2020-12-15T19:37:33+08:00
 categories: ["Frontend"]
+tags: ["JavaScript"]
 ---
 
 # JavaScript 原型和原型链

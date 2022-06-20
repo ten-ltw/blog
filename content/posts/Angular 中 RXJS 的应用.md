@@ -2,6 +2,7 @@
 title: "Angular 中 RXJS 的应用"
 date: 2021-04-08T18:03:02+08:00
 categories: ["Frontend"]
+tags: ["Angular", "RxJS"]
 ---
 
 # Angular 中 RXJS 的应用

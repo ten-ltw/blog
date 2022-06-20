@@ -2,6 +2,7 @@
 title: "Angular 变更检测——它到底是如何工作的？"
 date: 2021-03-23T19:41:26+08:00
 categories: ["Frontend"]
+tags: ["Angular"]
 ---
 
 # Angular 变更检测——它到底是如何工作的？

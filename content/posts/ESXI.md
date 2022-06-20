@@ -2,6 +2,7 @@
 title: "ESXI 相关配置"
 date: 2021-09-05T07:39:37+08:00
 categories: ["All In One Server"]
+tags: ["ESXI"]
 ---
 
 # ESXI 相关配置

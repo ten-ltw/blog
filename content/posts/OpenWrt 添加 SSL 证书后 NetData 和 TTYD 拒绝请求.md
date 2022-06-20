@@ -2,6 +2,7 @@
 title: "OpenWrt 添加 SSL 证书后 NetData 和 TTYD 拒绝请求"
 date: 2022-04-10T21:06:37+08:00
 categories: ["All In One Server"]
+tags: ["OpenWrt"]
 ---
 
 # OpenWrt 添加 SSL 证书后 NetData 和 TTYD 拒绝请求

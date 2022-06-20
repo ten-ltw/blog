@@ -2,6 +2,7 @@
 title: "OpenWrt 初识记录"
 date: 2021-10-14T22:12:37+08:00
 categories: ["All In One Server"]
+tags: ["OpenWrt"]
 ---
 
 # OpenWrt 初识记录
