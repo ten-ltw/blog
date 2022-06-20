@@ -561,7 +561,7 @@ hasCJKLanguage = true
   # Analytics config
   # 网站分析配置
   [params.analytics]
-    enable = false
+    enable = true
     # Google Analytics
     [params.analytics.google]
       id = "G-SHZBTMBMCF"
