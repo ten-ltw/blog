@@ -85,30 +85,46 @@ hiddenFromHomePage: true
     withCredentials?: boolean,
   }): Observable<Object>;
 ```
+
+需要将 `options` 的 `responseType` 属性设置为 `text`，get 的返回值就是 string 类型了。
+
+### TypeScript 通过类型减少错误
+
 这里印象中 http 的返回值应该是个 any 的 response，因为 http service 并不知道用户请求的是什么，他可能是任何东西。
 上下翻阅可以发现相关的 get 方法的重载，返回值通过形参 `options` 的 `responseType` 来决定。
 [github httpclient get](https://github.com/angular/angular/blob/3a60063a54d850c50ce962a8a39ce01cfee71398/packages/common/http/src/client.ts#L1179) 的实际实现果然还是直接用 any 返回，但是这样的描述文件就能达到字符串配置来控制返回值，这在类型安全中是非常实用的，如果不配置正确的 options，就不会得到正确的返回值，而这个错误不用在 runtime 中去解决，而在编译时就能够发现。
 尝试自己写一个这样的 typescript 例子：
 ```typescript
-interface ITester {
+class DeleteResult {
+    public deleteData: any;
+}
+class UpdateResult {
+    public updateData: any;
+ }
+class InsertResult {
+    public insertData: any;
+}
+class Tester {
     doAction(options: { action: 'delete' }): DeleteResult;
     doAction(options: { action: 'update' }): UpdateResult;
     doAction(options: { action: 'insert' }): InsertResult;
-}
-class Tester implements ITester {
     doAction(options: IOptions): any {
-        return {};
+        if (options.action === 'delete') return new DeleteResult();
+        if (options.action === 'update') return new UpdateResult();
+        if (options.action === 'insert') return new InsertResult();
     }
 }
 interface IOptions {
     action: 'delete' | 'update' | 'insert';
 }
-class DeleteResult { }
-class UpdateResult { }
-class InsertResult { }
 
-let tester:ITester = new Tester();
+let tester = new Tester();
 
-let result:InsertResult = tester.doAction({ action: 'delete' });
+let deleteResult: DeleteResult = tester.doAction({ action: 'delete' });
+// error: Property 'insertData' is missing in type 'DeleteResult' but required in type 'InsertResult'.
+let insertResult: InsertResult = tester.doAction({ action: 'delete' });
 ```
-并没有成功，再继续调查。
+
+这里如果三个类型都是空对象就不会报错，编译器会自动判断他们的类型是一样的，都是没有属性的空对象，所以类型可以互相转换。
+
+未来拓展可以尝试用这个特性来做异常处理。
