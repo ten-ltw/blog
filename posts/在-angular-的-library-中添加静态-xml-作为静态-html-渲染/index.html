@@ -1,0 +1,228 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染 - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染">
+<meta property="og:description" content="在当前项目中 End User License Agreement 是一个静态 XML 文件，在打包在了根目录下直接通过 Angular JS 渲染。 本次开发是升级这个应用为 Angular，并且将其以 Library 的形式引入公司">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-06-27T13:36:22+08:00">
+<meta property="article:modified_time" content="2022-06-27T13:36:22+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染">
+<meta name=twitter:description content="在当前项目中 End User License Agreement 是一个静态 XML 文件，在打包在了根目录下直接通过 Angular JS 渲染。 本次开发是升级这个应用为 Angular，并且将其以 Library 的形式引入公司">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/><link rel=prev href=https://blog.okten.cn/posts/single_process_electron_angular/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93\/"},"genre":"posts","keywords":"Angular","wordcount":1473,"url":"https:\/\/blog.okten.cn\/posts\/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93\/","datePublished":"2022-06-27T13:36:22+08:00","dateModified":"2022-06-27T13:36:22+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005185440822195" crossorigin=anonymous></script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog">Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-thin fa-archive"></i> 所有文章 </a><a class=menu-item href=/tags/><i class="fas fa-thin fa-tag"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-thin fa-folder-open"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search>
+<i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear>
+<i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog">Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search>
+<i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear>
+<i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+Cancel
+</a>
+</div><a class=menu-item href=/posts/ title><i class="fas fa-thin fa-archive"></i>所有文章</a><a class=menu-item href=/tags/ title><i class="fas fa-thin fa-tag"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-thin fa-folder-open"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2022-06-27>2022-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1473 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;3 minutes&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#单页面获取-xml-的访问权限>单页面获取 XML 的访问权限</a>
+<ul>
+<li><a href=#尝试直接在工程中添加子工程-assets-的目录>尝试直接在工程中添加子工程 assets 的目录</a></li>
+<li><a href=#调查目前渲染出来的图片是如何访问的>调查目前渲染出来的图片是如何访问的</a></li>
+<li><a href=#另外一种方式让-webpack-打包>另外一种方式让 webpack 打包</a></li>
+</ul>
+</li>
+<li><a href=#在-innterhtml-指令渲染-xml>在 innterhtml 指令渲染 XML</a>
+<ul>
+<li><a href=#获取-xml-数据>获取 xml 数据</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div><div class=content id=content><p>在当前项目中 <code>End User License Agreement</code> 是一个静态 XML 文件，在打包在了根目录下直接通过 Angular JS 渲染。
+本次开发是升级这个应用为 Angular，并且将其以 Library 的形式引入公司的一个前端的壳内，成为公司整个项目的一个可订阅的功能。
+总结需求就是在 Angular 前端工程中获取一个子 Libaray 的静态文件。</p>
+<h2 id=单页面获取-xml-的访问权限>单页面获取 XML 的访问权限</h2>
+<p>第一步要通过 http 就能够直接访问到 xml。<a href=http://localhost:4200/eula.xml target=_blank rel="noopener noreffer">http://localhost:4200/eula.xml</a></p>
+<h3 id=尝试直接在工程中添加子工程-assets-的目录>尝试直接在工程中添加子工程 assets 的目录</h3>
+<p>项目背景是一个独立的 Windows 程序，本应在这次 release 时进入 docker，成为公司整个软件中的一个订阅，而因为其他项目的延迟保持本项目独立。
+也就是说本次 release 我们的前端项目还是一个完整的应用直接进行发布，所以在整个项目的 <code>angular.json</code> 文件中直接为主工程添加子 Library 的静态文件目录，这样未来在删除主项目的时候不会使静态文件丢失。
+修改后编译失败，错误如下：</p>
+<blockquote>
+<p>An unhandled exception occurred: The projects/&mldr;./src/assets asset path must start with the project source root.</p>
+</blockquote>
+<p>也就是说 angular 不允许将 root 目录以外的路径设为资源文件进行编译。那么这个偷懒的方法肯定不行了。</p>
+<h3 id=调查目前渲染出来的图片是如何访问的>调查目前渲染出来的图片是如何访问的</h3>
+<p>接下来调查下 angular serve 和 build 后这些 assets 到底在什么地方。
+首先，<code>ng serve</code> 起来的 webpack server 中，可以通过根目录直接访问图片文件。devtool 中也可看到，在 <code>localhost：4200</code> 节点下确实有所有的添加在 assets 下面的图片。
+以子 Library 的 assets 目录为关键字，在所有代码中搜索发现，子 Library 目录下，有个配置文件 <code>ng-package.json</code> 中面有子 Library 的 assets 的配置。
+那么将 XML 文件放到子 Library 中，build 成功，serve 成功。build output 文件中有静态 XML 文件，但是画面无法访问到这个静态文件。
+这时想起来我们的子 Library 并不是真个页面的入口，真正渲染的 index 是外面的这个壳，也就是主工程，再次查看 build 结果中主工程的目录结构。</p>
+<blockquote>
+<p>build 根目录下除了主目录的 assets 目录外其他的图片都直接放在了根目录下。
+也就是说子 Library 的 assets 下文件都会自动打包到主工程的编译结果的根目录下。但是我添加的 XML 文件就没有被打包进来。</p>
+</blockquote>
+<h3 id=另外一种方式让-webpack-打包>另外一种方式让 webpack 打包</h3>
+<p>一直没有调查出来 angular 是如何配置才会将子目录的 assets 文件夹内的静态 resources 直接添加到根目录下，猜测这里可能会有个 filter 只添加图片 extension。这里结合前两种方式，直接将子 Library 的文件打包到主工程的根目录下，在 <code>angular.json</code> 的主项目节点的中配置 assets：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-JSON data-lang=JSON><span class=p>{</span>
+    <span class=nt>&#34;glob&#34;</span><span class=p>:</span><span class=s2>&#34;**/*.xml&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;input&#34;</span><span class=p>:</span> <span class=s2>&#34;projects/..your library../src/assets&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;output&#34;</span><span class=p>:</span> <span class=s2>&#34;/&#34;</span>
+<span class=p>}</span>
+</code></pre></div><p>这样，XML 文件会被原封不动的打包到主项目的根目录下，暂时先这样解决，回头如果有安全问题再继续调查。</p>
+<h2 id=在-innterhtml-指令渲染-xml>在 innterhtml 指令渲染 XML</h2>
+<p>此时已经能够通过 http 获取 xml 文件的数据，就通过 Angular 提供的 <code>HttpClient</code> service 来使用 http get 方法来获取 xml 文件内容。</p>
+<h3 id=获取-xml-数据>获取 xml 数据</h3>
+<p>将 <code>HttpClient</code> 注入为 <code>http</code> 后使用如下代码：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript>    <span class=kr>public</span> <span class=nx>elua</span>: <span class=kt>Observable</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>&gt;;</span>
+    <span class=c1>// ...
+</span><span class=c1></span>    <span class=nx>ngInit</span><span class=p>()</span><span class=o>:</span> <span class=k>void</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=nx>eula</span> <span class=o>=</span> <span class=k>this</span><span class=p>.</span><span class=nx>http</span><span class=p>.</span><span class=kr>get</span><span class=p>(</span><span class=s1>&#39;eula.xml&#39;</span><span class=p>);</span>
+    <span class=p>}</span>
+</code></pre></div><p>报错，这里说 <code>get</code> 的返回值是 Object，不能赋值给 string。
+瞅了一眼 get 的描述文件很有意思，这里放下源码：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript>   <span class=cm>/**
+</span><span class=cm>   * Constructs a `GET` request that interprets the body as a JSON object and
+</span><span class=cm>   * returns the response body as a JSON object.
+</span><span class=cm>   *
+</span><span class=cm>   * @param url     The endpoint URL.
+</span><span class=cm>   * @param options The HTTP options to send with the request.
+</span><span class=cm>   *
+</span><span class=cm>   *
+</span><span class=cm>   * @return An `Observable` of the response body as a JSON object.
+</span><span class=cm>   */</span>
+  <span class=kr>get</span><span class=p>(</span><span class=nx>url</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>options</span><span class=o>?:</span> <span class=p>{</span>
+    <span class=nx>headers?</span>: <span class=kt>HttpHeaders</span><span class=o>|</span><span class=p>{[</span><span class=nx>header</span>: <span class=kt>string</span><span class=p>]</span><span class=o>:</span> <span class=kt>string</span> <span class=o>|</span> <span class=kt>string</span><span class=p>[]},</span>
+    <span class=nx>context?</span>: <span class=kt>HttpContext</span><span class=p>,</span>
+    <span class=nx>observe</span><span class=o>?:</span> <span class=s1>&#39;body&#39;</span><span class=p>,</span>
+    <span class=nx>params?</span>: <span class=kt>HttpParams</span><span class=o>|</span>
+          <span class=p>{[</span><span class=nx>param</span>: <span class=kt>string</span><span class=p>]</span><span class=o>:</span> <span class=kt>string</span> <span class=o>|</span> <span class=kt>number</span> <span class=o>|</span> <span class=kr>boolean</span> <span class=o>|</span> <span class=nx>ReadonlyArray</span><span class=p>&lt;</span><span class=nt>string</span><span class=err>|</span><span class=na>number</span><span class=err>|</span><span class=na>boolean</span><span class=p>&gt;},</span>
+    <span class=nx>reportProgress?</span>: <span class=kt>boolean</span><span class=p>,</span>
+    <span class=nx>responseType</span><span class=o>?:</span> <span class=s1>&#39;json&#39;</span><span class=p>,</span>
+    <span class=nx>withCredentials?</span>: <span class=kt>boolean</span><span class=p>,</span>
+  <span class=p>})</span><span class=o>:</span> <span class=nx>Observable</span><span class=p>&lt;</span><span class=nt>Object</span><span class=p>&gt;;</span>
+</code></pre></div><p>这里印象中 http 的返回值应该是个 any 的 response，因为 http service 并不知道用户请求的是什么，他可能是任何东西。
+上下翻阅可以发现相关的 get 方法的重载，返回值通过形参 <code>options</code> 的 <code>responseType</code> 来决定。
+<a href=https://github.com/angular/angular/blob/3a60063a54d850c50ce962a8a39ce01cfee71398/packages/common/http/src/client.ts#L1179 target=_blank rel="noopener noreffer">github httpclient get</a> 的实际实现果然还是直接用 any 返回，但是这样的描述文件就能达到字符串配置来控制返回值，这在类型安全中是非常实用的，如果不配置正确的 options，就不会得到正确的返回值，而这个错误不用在 runtime 中去解决，而在编译时就能够发现。
+尝试自己写一个这样的 typescript 例子：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>ITester</span> <span class=p>{</span>
+    <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span><span class=o>:</span> <span class=p>{</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=p>})</span><span class=o>:</span> <span class=nx>DeleteResult</span><span class=p>;</span>
+    <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span><span class=o>:</span> <span class=p>{</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;update&#39;</span> <span class=p>})</span><span class=o>:</span> <span class=nx>UpdateResult</span><span class=p>;</span>
+    <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span><span class=o>:</span> <span class=p>{</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;insert&#39;</span> <span class=p>})</span><span class=o>:</span> <span class=nx>InsertResult</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kr>class</span> <span class=nx>Tester</span> <span class=kr>implements</span> <span class=nx>ITester</span> <span class=p>{</span>
+    <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span>: <span class=kt>IOptions</span><span class=p>)</span><span class=o>:</span> <span class=kt>any</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=p>{};</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+<span class=kr>interface</span> <span class=nx>IOptions</span> <span class=p>{</span>
+    <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=o>|</span> <span class=s1>&#39;update&#39;</span> <span class=o>|</span> <span class=s1>&#39;insert&#39;</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kr>class</span> <span class=nx>DeleteResult</span> <span class=p>{</span> <span class=p>}</span>
+<span class=kr>class</span> <span class=nx>UpdateResult</span> <span class=p>{</span> <span class=p>}</span>
+<span class=kr>class</span> <span class=nx>InsertResult</span> <span class=p>{</span> <span class=p>}</span>
+
+<span class=kd>let</span> <span class=nx>tester</span>:<span class=kt>ITester</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Tester</span><span class=p>();</span>
+
+<span class=kd>let</span> <span class=nx>result</span>:<span class=kt>InsertResult</span> <span class=o>=</span> <span class=nx>tester</span><span class=p>.</span><span class=nx>doAction</span><span class=p>({</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=p>});</span>
+</code></pre></div><p>并没有成功，再继续调查。</p>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2022-06-27</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/ data-title="在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染" data-hashtags=Angular><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/ data-hashtag=Angular><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/ data-title="在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/ data-title="在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/ data-title="在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/angular/>Angular</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/single_process_electron_angular/ class=prev rel=prev title="Electron 渲染 Angular 之同进程通信"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Electron 渲染 Angular 之同进程通信</a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2020 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span>&nbsp;|&nbsp;<span class=license><a rel=‘license external nofollow noopener noreffer’ href=‘https://creativecommons.org/licenses/by-nc/4.0/’ target=‘_blank’>CC BY-NC 4.0</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},search:{algoliaAppID:"OOS30TQZ13",algoliaIndex:"my_blog",algoliaSearchKey:"fe316b1e710c67a296e3ca697159b8f7",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-SHZBTMBMCF',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=G-SHZBTMBMCF" async></script></body>
+</html>
