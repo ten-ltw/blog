@@ -17,7 +17,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93/><link rel=prev href=https://blog.okten.cn/posts/single_process_electron_angular/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
 <noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
-<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93\/"},"genre":"posts","keywords":"Angular","wordcount":1473,"url":"https:\/\/blog.okten.cn\/posts\/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93\/","datePublished":"2022-06-27T13:36:22+08:00","dateModified":"2022-06-27T13:36:22+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005185440822195" crossorigin=anonymous></script></head>
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93\/"},"genre":"posts","keywords":"Angular","wordcount":1624,"url":"https:\/\/blog.okten.cn\/posts\/%E5%9C%A8-angular-%E7%9A%84-library-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E9%9D%99%E6%80%81-xml-%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81-html-%E6%B8%B2%E6%9F%93\/","datePublished":"2022-06-27T13:36:22+08:00","dateModified":"2022-06-27T13:36:22+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005185440822195" crossorigin=anonymous></script></head>
 <body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -83,8 +83,8 @@ Cancel
 <div class=toc-content id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/frontend/><i class="far fa-folder fa-fw" aria-hidden=true></i>Frontend</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2022-06-27>2022-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1473 words&nbsp;
-<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;3 minutes&nbsp;</div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2022-06-27>2022-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1624 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;4 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static data-kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
@@ -102,6 +102,7 @@ Cancel
 <li><a href=#在-innterhtml-指令渲染-xml>在 innterhtml 指令渲染 XML</a>
 <ul>
 <li><a href=#获取-xml-数据>获取 xml 数据</a></li>
+<li><a href=#typescript-通过类型减少错误>TypeScript 通过类型减少错误</a></li>
 </ul>
 </li>
 </ul>
@@ -168,31 +169,42 @@ Cancel
     <span class=nx>responseType</span><span class=o>?:</span> <span class=s1>&#39;json&#39;</span><span class=p>,</span>
     <span class=nx>withCredentials?</span>: <span class=kt>boolean</span><span class=p>,</span>
   <span class=p>})</span><span class=o>:</span> <span class=nx>Observable</span><span class=p>&lt;</span><span class=nt>Object</span><span class=p>&gt;;</span>
-</code></pre></div><p>这里印象中 http 的返回值应该是个 any 的 response，因为 http service 并不知道用户请求的是什么，他可能是任何东西。
+</code></pre></div><p>需要将 <code>options</code> 的 <code>responseType</code> 属性设置为 <code>text</code>，get 的返回值就是 string 类型了。</p>
+<h3 id=typescript-通过类型减少错误>TypeScript 通过类型减少错误</h3>
+<p>这里印象中 http 的返回值应该是个 any 的 response，因为 http service 并不知道用户请求的是什么，他可能是任何东西。
 上下翻阅可以发现相关的 get 方法的重载，返回值通过形参 <code>options</code> 的 <code>responseType</code> 来决定。
 <a href=https://github.com/angular/angular/blob/3a60063a54d850c50ce962a8a39ce01cfee71398/packages/common/http/src/client.ts#L1179 target=_blank rel="noopener noreffer">github httpclient get</a> 的实际实现果然还是直接用 any 返回，但是这样的描述文件就能达到字符串配置来控制返回值，这在类型安全中是非常实用的，如果不配置正确的 options，就不会得到正确的返回值，而这个错误不用在 runtime 中去解决，而在编译时就能够发现。
 尝试自己写一个这样的 typescript 例子：</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>interface</span> <span class=nx>ITester</span> <span class=p>{</span>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=kr>class</span> <span class=nx>DeleteResult</span> <span class=p>{</span>
+    <span class=kr>public</span> <span class=nx>deleteData</span>: <span class=kt>any</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kr>class</span> <span class=nx>UpdateResult</span> <span class=p>{</span>
+    <span class=kr>public</span> <span class=nx>updateData</span>: <span class=kt>any</span><span class=p>;</span>
+ <span class=p>}</span>
+<span class=kr>class</span> <span class=nx>InsertResult</span> <span class=p>{</span>
+    <span class=kr>public</span> <span class=nx>insertData</span>: <span class=kt>any</span><span class=p>;</span>
+<span class=p>}</span>
+<span class=kr>class</span> <span class=nx>Tester</span> <span class=p>{</span>
     <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span><span class=o>:</span> <span class=p>{</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=p>})</span><span class=o>:</span> <span class=nx>DeleteResult</span><span class=p>;</span>
     <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span><span class=o>:</span> <span class=p>{</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;update&#39;</span> <span class=p>})</span><span class=o>:</span> <span class=nx>UpdateResult</span><span class=p>;</span>
     <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span><span class=o>:</span> <span class=p>{</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;insert&#39;</span> <span class=p>})</span><span class=o>:</span> <span class=nx>InsertResult</span><span class=p>;</span>
-<span class=p>}</span>
-<span class=kr>class</span> <span class=nx>Tester</span> <span class=kr>implements</span> <span class=nx>ITester</span> <span class=p>{</span>
     <span class=nx>doAction</span><span class=p>(</span><span class=nx>options</span>: <span class=kt>IOptions</span><span class=p>)</span><span class=o>:</span> <span class=kt>any</span> <span class=p>{</span>
-        <span class=k>return</span> <span class=p>{};</span>
+        <span class=k>if</span> <span class=p>(</span><span class=nx>options</span><span class=p>.</span><span class=nx>action</span> <span class=o>===</span> <span class=s1>&#39;delete&#39;</span><span class=p>)</span> <span class=k>return</span> <span class=k>new</span> <span class=nx>DeleteResult</span><span class=p>();</span>
+        <span class=k>if</span> <span class=p>(</span><span class=nx>options</span><span class=p>.</span><span class=nx>action</span> <span class=o>===</span> <span class=s1>&#39;update&#39;</span><span class=p>)</span> <span class=k>return</span> <span class=k>new</span> <span class=nx>UpdateResult</span><span class=p>();</span>
+        <span class=k>if</span> <span class=p>(</span><span class=nx>options</span><span class=p>.</span><span class=nx>action</span> <span class=o>===</span> <span class=s1>&#39;insert&#39;</span><span class=p>)</span> <span class=k>return</span> <span class=k>new</span> <span class=nx>InsertResult</span><span class=p>();</span>
     <span class=p>}</span>
 <span class=p>}</span>
 <span class=kr>interface</span> <span class=nx>IOptions</span> <span class=p>{</span>
     <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=o>|</span> <span class=s1>&#39;update&#39;</span> <span class=o>|</span> <span class=s1>&#39;insert&#39;</span><span class=p>;</span>
 <span class=p>}</span>
-<span class=kr>class</span> <span class=nx>DeleteResult</span> <span class=p>{</span> <span class=p>}</span>
-<span class=kr>class</span> <span class=nx>UpdateResult</span> <span class=p>{</span> <span class=p>}</span>
-<span class=kr>class</span> <span class=nx>InsertResult</span> <span class=p>{</span> <span class=p>}</span>
 
-<span class=kd>let</span> <span class=nx>tester</span>:<span class=kt>ITester</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Tester</span><span class=p>();</span>
+<span class=kd>let</span> <span class=nx>tester</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Tester</span><span class=p>();</span>
 
-<span class=kd>let</span> <span class=nx>result</span>:<span class=kt>InsertResult</span> <span class=o>=</span> <span class=nx>tester</span><span class=p>.</span><span class=nx>doAction</span><span class=p>({</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=p>});</span>
-</code></pre></div><p>并没有成功，再继续调查。</p>
+<span class=kd>let</span> <span class=nx>deleteResult</span>: <span class=kt>DeleteResult</span> <span class=o>=</span> <span class=nx>tester</span><span class=p>.</span><span class=nx>doAction</span><span class=p>({</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=p>});</span>
+<span class=c1>// error: Property &#39;insertData&#39; is missing in type &#39;DeleteResult&#39; but required in type &#39;InsertResult&#39;.
+</span><span class=c1></span><span class=kd>let</span> <span class=nx>insertResult</span>: <span class=kt>InsertResult</span> <span class=o>=</span> <span class=nx>tester</span><span class=p>.</span><span class=nx>doAction</span><span class=p>({</span> <span class=nx>action</span><span class=o>:</span> <span class=s1>&#39;delete&#39;</span> <span class=p>});</span>
+</code></pre></div><p>这里如果三个类型都是空对象就不会报错，编译器会自动判断他们的类型是一样的，都是没有属性的空对象，所以类型可以互相转换。</p>
+<p>未来拓展可以尝试用这个特性来做异常处理。</p>
 </div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
