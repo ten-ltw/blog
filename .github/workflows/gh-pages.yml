@@ -35,9 +35,9 @@ jobs:
           publish_branch: blog
 
       - name: Algolia Docsearch Uploader
-        uses: darrenjennings/algolia-docsearch-action@master
-        with:
-          file: "./public/index.json"
-          algolia_application_id: ${{secrets.ALGOLIA_APPLICATION_ID}}
-          algolia_api_key: ${{secrets.ALGOLIA_API_KEY}}
-          # INDEX_NAME: "my_blog"
+        uses: guzhongren/algolia-docsearch-upload-action@v2.0.0
+        env:
+          FILE_PATH: "./public/index.json"
+          APPLICATION_ID: ${{secrets.ALGOLIA_APPLICATION_ID}}
+          ADMIN_API_KEY: ${{secrets.ALGOLIA_API_KEY}}
+          INDEX_NAME: "my_blog"
