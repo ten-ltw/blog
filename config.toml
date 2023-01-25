@@ -159,8 +159,8 @@ hasCJKLanguage = true
     absoluteURL = false
     [params.search.algolia]
       index = "my_blog"
-      appID = "OOS30TQZ13"
-      searchKey = "fe316b1e710c67a296e3ca697159b8f7"
+      appID = "CU58EYJ0LJ"
+      searchKey = "2d647f8515a40908b1729923259b6e95"
 
   # Home page config
   # 主页信息设置
