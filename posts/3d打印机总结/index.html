@@ -1,0 +1,182 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<title>klipper 使用总结 - Ten's Blog</title><meta name=Description content="This is my blog"><meta property="og:title" content="klipper 使用总结">
+<meta property="og:description" content="记录一些容易忘记的内容。 文件配置部分 gcode_arcs [gcode_arcs]resolution:0.1不配置会打出来空心方块 取消和暂停 取消暂停 macro 在 fluidd 客户">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2023-01-25T18:28:58+08:00">
+<meta property="article:modified_time" content="2023-01-25T18:28:58+08:00"><meta property="og:site_name" content="My cool site">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="klipper 使用总结">
+<meta name=twitter:description content="记录一些容易忘记的内容。 文件配置部分 gcode_arcs [gcode_arcs]resolution:0.1不配置会打出来空心方块 取消和暂停 取消暂停 macro 在 fluidd 客户">
+<meta name=application-name content="Ten's Blog">
+<meta name=apple-mobile-web-app-title content="Ten's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/><link rel=prev href=https://blog.okten.cn/posts/%E7%BB%93%E6%9D%9F%E7%96%AB%E6%83%85/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null,this.rel='stylesheet'">
+<noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"klipper 使用总结","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.okten.cn\/posts\/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93\/"},"genre":"posts","keywords":"3D 打印","wordcount":348,"url":"https:\/\/blog.okten.cn\/posts\/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93\/","datePublished":"2023-01-25T18:28:58+08:00","dateModified":"2023-01-25T18:28:58+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"Ten Li"},"description":""}</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005185440822195" crossorigin=anonymous></script></head>
+<body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog">Ten's Blog</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-thin fa-archive"></i> 所有文章 </a><a class=menu-item href=/tags/><i class="fas fa-thin fa-tag"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-thin fa-folder-open"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search>
+<i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear>
+<i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title="Ten's Blog">Ten's Blog</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search>
+<i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear>
+<i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+Cancel
+</a>
+</div><a class=menu-item href=/posts/ title><i class="fas fa-thin fa-archive"></i>所有文章</a><a class=menu-item href=/tags/ title><i class="fas fa-thin fa-tag"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-thin fa-folder-open"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i>
+</a></div>
+</div>
+</header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>Contents</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">klipper 使用总结</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://blog.okten.cn/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Ten Li</a></span>&nbsp;<span class=post-category>included in <a href=/categories/3d-printing/><i class="far fa-folder fa-fw" aria-hidden=true></i>3d printing</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2023-01-25>2023-01-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;348 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;One minute&nbsp;</div>
+</div><div class="details toc" id=toc-static data-kept>
+<div class="details-summary toc-title">
+<span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#文件配置部分>文件配置部分</a>
+<ul>
+<li><a href=#gcode_arcs>gcode_arcs</a></li>
+<li><a href=#取消和暂停>取消和暂停</a></li>
+</ul>
+</li>
+<li><a href=#调试>调试</a>
+<ul>
+<li><a href=#z_endstop_calibrate>Z_ENDSTOP_CALIBRATE</a></li>
+<li><a href=#probe_calibrate>PROBE_CALIBRATE</a></li>
+</ul>
+</li>
+<li><a href=#切片>切片</a>
+<ul>
+<li><a href=#printer-g-code-自动加热>Printer G-code 自动加热</a></li>
+<li><a href=#printer-g-code-自动划线>Printer G-code 自动划线</a></li>
+<li><a href=#filament-g-code-设置不同耗材的网床和压力提前>Filament G-code 设置不同耗材的网床和压力提前</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div><div class=content id=content><p>记录一些容易忘记的内容。</p>
+<h2 id=文件配置部分>文件配置部分</h2>
+<h3 id=gcode_arcs>gcode_arcs</h3>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=p>[</span><span class=l>gcode_arcs]</span><span class=w>
+</span><span class=w></span><span class=nt>resolution</span><span class=p>:</span><span class=w> </span><span class=m>0.1</span><span class=w>
+</span></code></pre></div><p>不配置会打出来空心方块</p>
+<h3 id=取消和暂停>取消和暂停</h3>
+<p>取消暂停 macro 在 fluidd 客户端配置里。</p>
+<h2 id=调试>调试</h2>
+<h3 id=z_endstop_calibrate>Z_ENDSTOP_CALIBRATE</h3>
+<p>在 Z endstop 与热床不在同一 Z 位置的打印机上需要调节。
+取消网床，归零调平后，将打印头放置到中央，使用 <code>Z_ENDSTOP_CALIBRATE</code> 调整 A4 纸喷嘴高度后保存。</p>
+<h3 id=probe_calibrate>PROBE_CALIBRATE</h3>
+<p>探针 Z 与喷嘴有偏移量时需要<strong>在测试网床前调整</strong>。
+取消网床，归零调平后，将打印头放置到中央，使用 <code>PROBE_CALIBRATE</code>，dock 探针后，调整 A4 纸喷嘴高度后保存。</p>
+<h2 id=切片>切片</h2>
+<h3 id=printer-g-code-自动加热>Printer G-code 自动加热</h3>
+<pre tabindex=0><code class=language-G-code data-lang=G-code>M190 S[first_layer_bed_temperature]
+M109 S{first_layer_temperature[initial_extruder] + extruder_temperature_offset[initial_extruder]}
+</code></pre><h3 id=printer-g-code-自动划线>Printer G-code 自动划线</h3>
+<p>根据 bed Y 范围设置差不多的划线距离。</p>
+<pre tabindex=0><code class=language-G-code data-lang=G-code>PRINT_START
+G92 E0.0;
+G1 Z2.0 F3000 ;Move Z Axis up
+G1 X7 Y30 Z0.28 F5000.0 ;Move to start position
+G1 X7 Y120.0 Z0.28 F1500.0 E15 ;Draw the first line
+G1 X7.4 Y120.0 Z0.28 F5000.0 ;Move to side a little
+G1 X7.4 Y10 Z0.28 F1500.0 E30 ;Draw the second line
+G92 E0.0
+G1 Z2.0 F3000 ;Move Z Axis up
+</code></pre><h3 id=filament-g-code-设置不同耗材的网床和压力提前>Filament G-code 设置不同耗材的网床和压力提前</h3>
+<p>前提保存相应名称的网床数据。</p>
+<pre tabindex=0><code class=language-G-code data-lang=G-code>SET_PRESSURE_ADVANCE ADVANCE=0.0247
+BED_MESH_PROFILE LOAD=55
+</code></pre></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>Updated on 2023-01-25</span>
+</div></div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/ data-title="klipper 使用总结" data-hashtags="3D 打印"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/ data-hashtag="3D 打印"><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/ data-title="klipper 使用总结"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/ data-title="klipper 使用总结"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://blog.okten.cn/posts/3d%E6%89%93%E5%8D%B0%E6%9C%BA%E6%80%BB%E7%BB%93/ data-title="klipper 使用总结"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/3d-%E6%89%93%E5%8D%B0/>3D 打印</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/%E7%BB%93%E6%9D%9F%E7%96%AB%E6%83%85/ class=prev rel=prev title=结束疫情><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>结束疫情</a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2020 - 2023</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://blog.okten.cn/ target=_blank>Ten Li</a></span>&nbsp;|&nbsp;<span class=license><a rel=‘license external nofollow noopener noreffer’ href=‘https://creativecommons.org/licenses/by-nc/4.0/’ target=‘_blank’>CC BY-NC 4.0</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top">
+<i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments">
+<i class="fas fa-comment fa-fw" aria-hidden=true></i>
+</a>
+</div><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},search:{algoliaAppID:"OOS30TQZ13",algoliaIndex:"my_blog",algoliaSearchKey:"fe316b1e710c67a296e3ca697159b8f7",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-SHZBTMBMCF',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=G-SHZBTMBMCF" async></script></body>
+</html>
