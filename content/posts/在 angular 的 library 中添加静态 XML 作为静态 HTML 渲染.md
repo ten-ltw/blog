@@ -1,5 +1,5 @@
 ---
-title: "在 angular 的 library 中添加静态 XML 作为静态 HTML 渲染"
+title: "在 Angular 的 library 中添加静态 XML 作为静态 HTML 渲染"
 date: 2022-06-27T13:36:22+08:00
 categories: ["Frontend"]
 tags: ["Angular"]
